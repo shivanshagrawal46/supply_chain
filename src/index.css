@@ -1,0 +1,279 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+
+:root {
+  /* Premium minimalist palette inspired by Maersk / DSV / Apple */
+  --ink: #0a0a0a;
+  --ink-soft: #1a1a1a;
+  --paper: #fafaf7;
+  --paper-2: #f5f4ef;
+  --paper-3: #ebe9e2;
+  --line: #e5e3dc;
+  --line-2: #d4d1c7;
+  --muted: #6b6b66;
+  --muted-2: #9a9994;
+
+  /* River accent — earned from the supply image (deep ocean teal) */
+  --river: #0e5560;
+  --river-soft: #1d8997;
+  --river-mist: #c8e0e3;
+
+  /* Functional */
+  --gold: #b8893b;
+  --red: #b1372a;
+
+  --radius: 4px;
+  --radius-lg: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+body {
+  font-feature-settings: "ss01", "cv01", "cv02";
+}
+
+img { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+button { font-family: inherit; cursor: pointer; }
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track { background: var(--paper-2); }
+::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ============ Type system ============ */
+.serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--muted);
+}
+
+.display {
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+}
+
+.h1 {
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+.h2 {
+  font-size: clamp(28px, 3.6vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+.h3 {
+  font-size: clamp(20px, 2vw, 24px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+.lead {
+  font-size: clamp(16px, 1.4vw, 19px);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.body {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-feature-settings: "tnum";
+}
+
+/* ============ Layout helpers ============ */
+.container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.section {
+  padding: clamp(80px, 12vw, 160px) 0;
+  position: relative;
+}
+
+.section-tight { padding: clamp(60px, 8vw, 100px) 0; }
+
+.dark { background: var(--ink); color: var(--paper); }
+.dark .body { color: rgba(250, 250, 247, 0.6); }
+.dark .eyebrow { color: rgba(250, 250, 247, 0.55); }
+.dark .eyebrow::before { background: rgba(250, 250, 247, 0.4); }
+.dark .lead { color: rgba(250, 250, 247, 0.75); }
+
+.cream { background: var(--paper-2); }
+
+/* ============ Buttons ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+.btn-light {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+
+.btn-river {
+  background: var(--river);
+  border-color: var(--river);
+}
+.btn-river:hover { background: var(--ink); border-color: var(--ink); }
+
+/* ============ Components ============ */
+.divider {
+  height: 1px;
+  background: var(--line);
+  width: 100%;
+}
+.dark .divider { background: rgba(250,250,247,0.08); }
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--river-soft);
+  display: inline-block;
+}
+
+.pulse {
+  position: relative;
+}
+.pulse::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: var(--river-soft);
+  opacity: 0.4;
+  animation: pulse 2s ease-out infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(0.6); opacity: 0.5; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.marquee {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  gap: 60px;
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+}
+.fade-up.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============ Ant Design overrides ============ */
+.ant-modal-content {
+  background: var(--paper) !important;
+  border-radius: 16px !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+.ant-modal-close { color: var(--ink) !important; }
+
+.ant-input, .ant-input-affix-wrapper {
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: transparent !important;
+  font-size: 15px !important;
+  padding: 12px 0 !important;
+  box-shadow: none !important;
+}
+.ant-input:focus, .ant-input-affix-wrapper-focused {
+  border-bottom-color: var(--ink) !important;
+  box-shadow: none !important;
+}
+
+.ant-select-selector {
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Hide default focus outlines we don't want */
+*:focus { outline: none; }
+*:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }

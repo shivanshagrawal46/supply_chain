@@ -1,0 +1,71 @@
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { values } from '../data/siteData';
+
+export default function Values() {
+  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true });
+
+  return (
+    <section className="section" ref={ref}>
+      <div className="container">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 24, marginBottom: 60 }}
+        >
+          <div style={{ maxWidth: 720 }}>
+            <span className="eyebrow">08 — What we operate on</span>
+            <h2 className="h1" style={{ marginTop: 24 }}>
+              Values that decide<br />
+              <span className="serif" style={{ fontStyle: 'italic' }}>how</span> we operate.
+            </h2>
+          </div>
+          <p className="body" style={{ maxWidth: 380 }}>
+            The principles that shape every contract, every shipment, every conversation — clear, direct, no ambiguity.
+          </p>
+        </motion.div>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: 1,
+            background: 'var(--line)',
+            border: '1px solid var(--line)',
+          }}
+        >
+          {values.map((v, i) => {
+            const Icon = v.icon;
+            return (
+              <motion.div
+                key={v.name}
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.05 * i }}
+                whileHover={{ backgroundColor: 'var(--paper-2)' }}
+                style={{
+                  background: 'var(--paper)',
+                  padding: '32px 28px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 14,
+                  minHeight: 220,
+                  cursor: 'default',
+                  transition: 'background 0.3s',
+                }}
+              >
+                <div className="mono" style={{ fontSize: 11, color: 'var(--muted)' }}>0{i + 1}</div>
+                <Icon size={26} strokeWidth={1.4} color="var(--ink)" />
+                <h3 style={{ fontSize: 19, fontWeight: 500, letterSpacing: '-0.01em', marginTop: 'auto' }}>
+                  {v.name}
+                </h3>
+                <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.55 }}>{v.body}</p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
