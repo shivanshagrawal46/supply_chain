@@ -7,7 +7,7 @@ export default function Contact() {
 
   const contactItems = [
     { icon: Mail, label: 'Email', value: 'contact@riverglobal.com.au', href: 'mailto:contact@riverglobal.com.au' },
-    { icon: Phone, label: 'Phone (AU)', value: '+61 2 0000 0000', href: 'tel:+61200000000' },
+    { icon: Phone, label: 'Phone (AU)', value: '+61 431 770 855', href: 'tel:+61431770855' },
     { icon: MapPin, label: 'Offices', value: 'Adelaide, Australia · Delhi, India', href: null },
     { icon: Clock, label: 'Response time', value: 'Within one business day', href: null },
   ];

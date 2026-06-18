@@ -585,7 +585,8 @@ export default function Products() {
                 {cat.products.map((prod) => (
                   <button
                     key={prod.id}
-                    onClick={() => openProduct(prod, cat.title)}
+                    /* Product detail modal temporarily disabled — clicking does nothing for now.
+                       Re-enable by restoring: onClick={() => openProduct(prod, cat.title)} */
                     style={{
                       display: 'inline-flex', alignItems: 'center', gap: 6,
                       padding: '8px 14px',
@@ -653,7 +654,7 @@ export default function Products() {
 
       </div>
 
-      {/* Detail modal */}
+      {/* Detail modal — TEMPORARILY DISABLED (do not delete). Restore this block to re-enable product pages.
       <Modal
         open={!!selected}
         onCancel={() => setSelected(null)}
@@ -674,6 +675,7 @@ export default function Products() {
           />
         )}
       </Modal>
+      */}
     </section>
   );
 }

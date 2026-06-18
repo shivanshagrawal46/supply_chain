@@ -45,12 +45,21 @@ pm2 save
 This is the **only** step involving nginx. You **add a new file** — you do not edit
 any existing site's config, so the other websites are unaffected.
 
-Create `/etc/nginx/sites-available/river-global`:
+First point DNS at the droplet — at your registrar add two A records:
+
+| Type | Host | Value |
+|------|------|----------------|
+| A | `@`   | `139.59.39.65` |
+| A | `www` | `139.59.39.65` |
+
+Verify it resolves: `dig +short riverglobal.com.au` → should print `139.59.39.65`.
+
+Then create `/etc/nginx/sites-available/river-global`:
 
 ```nginx
 server {
     listen 80;
-    server_name riverglobal.com.au www.riverglobal.com.au;   # <- your domain
+    server_name riverglobal.com.au www.riverglobal.com.au;
 
     location / {
         proxy_pass http://127.0.0.1:4173;     # must match PORT in deploy.sh
@@ -72,10 +81,18 @@ sudo nginx -t          # verify config is valid
 sudo systemctl reload nginx
 ```
 
-### 4. (Optional) HTTPS
+### 4. HTTPS / SSL certificate (free, auto-renewing)
 ```bash
+sudo apt update
+sudo apt install certbot python3-certbot-nginx -y
 sudo certbot --nginx -d riverglobal.com.au -d www.riverglobal.com.au
 ```
+Choose **redirect HTTP → HTTPS** when prompted. Certbot edits the nginx block to
+add `listen 443 ssl` and sets up auto-renewal. Test renewal with:
+`sudo certbot renew --dry-run`.
+
+Make sure ports 80/443 are open: `sudo ufw allow 'Nginx Full'` (and in the DO
+cloud firewall if you use one).
 
 ---
 

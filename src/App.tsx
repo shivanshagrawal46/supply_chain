@@ -42,10 +42,10 @@ export default function App() {
           <Hero />
           <WhoWeAre />
           <Capabilities />
+          <WhyRiver />
           <Industries />
           <Products />
           <Values />
-          <WhyRiver />
           <SupplyInMotion />
           <GlobalNetwork />
           <Contact />

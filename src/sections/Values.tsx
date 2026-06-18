@@ -56,7 +56,6 @@ export default function Values() {
                   transition: 'background 0.3s',
                 }}
               >
-                <div className="mono" style={{ fontSize: 11, color: 'var(--muted)' }}>0{i + 1}</div>
                 <Icon size={26} strokeWidth={1.4} color="var(--river-soft)" />
                 <h3 style={{ fontSize: 19, fontWeight: 500, letterSpacing: '-0.01em', marginTop: 'auto' }}>
                   {v.name}

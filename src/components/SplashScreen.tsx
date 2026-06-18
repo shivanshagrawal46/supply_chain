@@ -73,7 +73,7 @@ export default function SplashScreen() {
         }}
       >
         <span style={{ width: 18, height: 1, background: 'rgba(250,250,247,0.3)' }} />
-        Est. Sydney · Mumbai
+        Adelaide · Delhi
         <span style={{ width: 18, height: 1, background: 'rgba(250,250,247,0.3)' }} />
       </motion.div>
 

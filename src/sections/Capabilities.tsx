@@ -76,8 +76,8 @@ export default function Capabilities() {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
                     <motion.div
-                      animate={{ rotate: isHover ? 12 : 0, scale: isHover ? 1.05 : 1 }}
-                      transition={{ duration: 0.5 }}
+                      animate={{ x: isHover ? 10 : 0, scale: isHover ? 1.04 : 1 }}
+                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                       style={{
                         width: 48, height: 48, borderRadius: 12,
                         background: isHover ? 'rgba(255,255,255,0.1)' : 'var(--paper)',
@@ -99,11 +99,11 @@ export default function Capabilities() {
                   </p>
 
                   <motion.div
-                    animate={{ rotate: isHover ? 45 : 0 }}
-                    transition={{ duration: 0.4 }}
+                    animate={{ opacity: isHover ? 0 : 1, scale: isHover ? 0.8 : 1 }}
+                    transition={{ duration: 0.3 }}
                     style={{
                       width: 36, height: 36, borderRadius: 999,
-                      border: `1px solid ${isHover ? 'rgba(255,255,255,0.3)' : 'var(--line-2)'}`,
+                      border: '1px solid var(--line-2)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       marginLeft: 'auto',
                     }}
@@ -121,7 +121,7 @@ export default function Capabilities() {
                       transition={{ duration: 0.4 }}
                       style={{ position: 'relative', overflow: 'hidden' }}
                     >
-                      <div style={{ display: 'flex', gap: 12, paddingTop: 22, marginLeft: 66, color: 'rgba(255,255,255,0.85)' }}>
+                      <div className="cap-points" style={{ display: 'flex', flexWrap: 'wrap', gap: 12, paddingTop: 22, marginLeft: 66, color: 'rgba(255,255,255,0.85)' }}>
                         {cap.points.map((point) => (
                           <span
                             key={point}
@@ -150,6 +150,7 @@ export default function Capabilities() {
         @media (max-width: 900px) {
           .cap-row { grid-template-columns: 1fr !important; gap: 12px !important; }
           .cap-desc { max-width: 100% !important; }
+          .cap-points { margin-left: 0 !important; gap: 8px !important; }
         }
       `}</style>
     </section>

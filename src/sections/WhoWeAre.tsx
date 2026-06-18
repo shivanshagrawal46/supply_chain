@@ -80,7 +80,7 @@ export default function WhoWeAre() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.1 }}
           >
-            <p className="lead" style={{ marginBottom: 24 }}>
+            <p className="lead" style={{ marginBottom: 24, color: 'var(--muted)', fontStyle: 'italic' }}>
               We create clarity through integrated edge. We are not simply a supplier, nor simply
               logistics, not simply freight forwarding.
             </p>

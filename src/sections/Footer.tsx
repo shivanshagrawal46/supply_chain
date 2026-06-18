@@ -7,7 +7,6 @@ const NAV_MAP = [
     links: [
       { label: 'Who We Are', href: '#who' },
       { label: 'What We Do', href: '#capabilities' },
-      { label: 'Leadership', href: '#leadership' },
       { label: 'Values', href: '#values' },
     ],
   },
@@ -25,8 +24,6 @@ const NAV_MAP = [
     links: [
       { label: 'Why River Global', href: '#why' },
       { label: 'Contact Us', href: '#contact' },
-      { label: 'HSE Policy', href: '#' },
-      { label: 'Compliance', href: '#' },
     ],
   },
 ];
@@ -183,7 +180,7 @@ export default function Footer() {
             General inquiries: contact@riverglobal.com.au
           </span>
           <div style={{ display: 'flex', gap: 20 }}>
-            {['Privacy', 'Terms', 'HSE Policy'].map((l) => (
+            {['Privacy', 'Terms'].map((l) => (
               <a key={l} href="#" style={{ color: 'rgba(255,255,255,0.38)', textDecoration: 'none', transition: 'color 0.2s' }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--river-mist)')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.38)')}

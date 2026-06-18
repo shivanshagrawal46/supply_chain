@@ -71,6 +71,7 @@ export default function Hero() {
       >
         {/* The image — dual-axis mask: dissolves into paper on LEFT and BOTTOM */}
         <motion.div
+          className="hero-image-inner"
           initial={{ scale: 1.18 }}
           animate={{ scale: 1 }}
           transition={{ duration: 2.6, ease }}
@@ -122,6 +123,7 @@ export default function Hero() {
 
         {/* Paper-tinted bridge — covers left half only, fully out before the boat zone */}
         <div
+          className="hero-left-blend"
           style={{
             position: 'absolute',
             inset: 0,
@@ -141,6 +143,7 @@ export default function Hero() {
 
         {/* Painterly noise at the LEFT edge transition */}
         <div
+          className="hero-left-blend"
           style={{
             position: 'absolute',
             inset: 0,
@@ -176,11 +179,11 @@ export default function Hero() {
       </motion.div>
 
       {/* ============ TOP SPACER ============ */}
-      <div style={{ paddingTop: 100 }} />
+      <div className="hero-topspacer" style={{ paddingTop: 100 }} />
 
       {/* ============ MAIN CONTENT ============ */}
       <div
-        className="container"
+        className="container hero-main"
         style={{
           position: 'relative',
           zIndex: 4,
@@ -307,6 +310,7 @@ export default function Hero() {
 
             <motion.a
               href="#who"
+              className="hero-scroll"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -335,6 +339,7 @@ export default function Hero() {
 
       {/* ============ TRUSTED MARQUEE — in-viewport at bottom of hero ============ */}
       <motion.div
+        className="hero-marquee"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8, duration: 0.6 }}
@@ -439,19 +444,50 @@ export default function Hero() {
         }
 
         @media (max-width: 900px) {
-          section#top { height: auto !important; min-height: 100vh; }
+          /* Stack the hero cleanly: nav clearance → text → image banner → trust strip.
+             Putting text first keeps the dark navbar logo over the light page, not the photo. */
+          section#top { height: auto !important; min-height: auto !important; max-height: none !important; }
           .hero-text-col { max-width: 100% !important; }
+
+          .hero-topspacer { order: 1; padding-top: 84px !important; }
+          .hero-main {
+            order: 2;
+            padding-top: 8px !important;
+            padding-bottom: 30px !important;
+          }
           .hero-image-bleed {
+            order: 3;
             position: relative !important;
             width: 100% !important;
-            height: 340px !important;
+            height: 280px !important;
             bottom: auto !important;
-            margin-top: 32px;
+            margin-top: 4px;
           }
+          .hero-marquee { order: 4; }
+
+          /* Single clean bottom-and-top fade so the photo melts into the paper */
+          .hero-image-inner {
+            -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 72%, transparent 100%) !important;
+            mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 72%, transparent 100%) !important;
+            -webkit-mask-composite: source-over !important;
+            mask-composite: add !important;
+            -webkit-mask-size: 100% 100% !important;
+            mask-size: 100% 100% !important;
+            background-position: center 35% !important;
+          }
+          /* The left-edge blends are for the desktop split layout only */
+          .hero-left-blend { display: none !important; }
         }
 
         @media (max-width: 600px) {
-          .hero-metrics { gap: 18px !important; }
+          /* 2 metrics per row, and hide the scroll cue on mobile */
+          .hero-metrics {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 16px 18px !important;
+          }
+          .hero-scroll { display: none !important; }
+          .hero-image-bleed { height: 230px !important; }
         }
       `}</style>
     </section>
