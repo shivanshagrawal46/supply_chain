@@ -7,13 +7,14 @@ import WhoWeAre from './sections/WhoWeAre';
 import Capabilities from './sections/Capabilities';
 import Industries from './sections/Industries';
 import Products from './sections/Products';
+import SupplyInMotion from './sections/SupplyInMotion';
 import GlobalNetwork from './sections/GlobalNetwork';
 import WhyRiver from './sections/WhyRiver';
-import SupplyInMotion from './sections/SupplyInMotion';
 import Values from './sections/Values';
-import Leadership from './sections/Leadership';
 import Contact from './sections/Contact';
 import Footer from './sections/Footer';
+// Leadership temporarily hidden — to be reintroduced once team profiles are finalised
+// import Leadership from './sections/Leadership';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -43,11 +44,10 @@ export default function App() {
           <Capabilities />
           <Industries />
           <Products />
-          <GlobalNetwork />
+          <Values />
           <WhyRiver />
           <SupplyInMotion />
-          <Values />
-          <Leadership />
+          <GlobalNetwork />
           <Contact />
         </main>
         <Footer />

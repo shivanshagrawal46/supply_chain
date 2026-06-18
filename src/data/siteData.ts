@@ -5,10 +5,11 @@ import {
 } from 'lucide-react';
 
 export const navLinks = [
-  { label: 'Who we are', href: '#who' },
-  { label: 'Capabilities', href: '#capabilities' },
+  { label: 'Who We Are', href: '#who' },
+  { label: 'What We Do', href: '#capabilities' },
   { label: 'Industries', href: '#industries' },
   { label: 'Products', href: '#products' },
+  { label: 'How We Do It', href: '#motion' },
   { label: 'Network', href: '#network' },
   { label: 'Contact', href: '#contact' },
 ];
@@ -59,9 +60,9 @@ export const capabilities = [
 ];
 
 export const industries = [
-  { id: 'agriculture', icon: Wheat, title: 'Agriculture', tag: 'Fertilisers · Inputs', description: 'Fertilisers, soil amendments and nano-nutrient inputs to support large-scale agricultural operations.' },
+  { id: 'energy', icon: Flame, title: 'Oil & Gas', tag: 'Process chemicals', description: 'Process chemicals, gases and specialised inputs for upstream and downstream energy operations.' },
   { id: 'mining', icon: Mountain, title: 'Mining', tag: 'Reagents · Minerals', description: 'Industrial minerals, reagents and bulk inputs for mineral processing and resource extraction.' },
-  { id: 'energy', icon: Flame, title: 'Energy & Oil/Gas', tag: 'Process chemicals', description: 'Process chemicals, gases and specialised inputs for upstream and downstream energy operations.' },
+  { id: 'agriculture', icon: Wheat, title: 'Agriculture', tag: 'Fertilisers · Inputs', description: 'Fertilisers, soil amendments and nano-nutrient inputs to support large-scale agricultural operations.' },
   { id: 'infrastructure', icon: HardHat, title: 'Infrastructure', tag: 'Construction · Civil', description: 'Materials and coordination for large infrastructure programs and civil construction projects.' },
   { id: 'manufacturing', icon: Factory, title: 'Manufacturing', tag: 'Industrial inputs', description: 'Continuous flow of industrial inputs supporting production lines and manufacturing operations.' },
   { id: 'medical', icon: HeartPulse, title: 'Medical & Pharma', tag: 'Gases · Reagents', description: 'Specialty gases, reagents and compliant materials for medical and pharmaceutical applications.' },
@@ -267,26 +268,33 @@ export const products: Product[] = [
 ];
 
 export const networkLocations = [
-  { region: 'Australia', cities: ['Sydney', 'Melbourne', 'Perth', 'Brisbane'], type: 'Primary operations' },
-  { region: 'India', cities: ['Mumbai', 'Chennai', 'Kandla', 'Gujarat'], type: 'Operational support' },
-  { region: 'Asia Pacific', cities: ['Singapore', 'Jakarta', 'Manila'], type: 'Partner network' },
-  { region: 'Middle East', cities: ['Dubai', 'Jebel Ali', 'Dammam'], type: 'Trade corridor' },
+  { region: 'Australia', cities: [], type: 'Primary operations' },
+  { region: 'Southeast Asia', cities: [], type: 'Partner network' },
+  { region: 'East Asia', cities: [], type: 'Trade corridor' },
+  { region: 'South Asia', cities: [], type: 'Operational support' },
+  { region: 'Pacific Islands', cities: [], type: 'Partner network' },
+  { region: 'Middle East', cities: [], type: 'Trade corridor' },
 ];
 
 export const whyRiverPoints = [
-  { title: 'Integrated Flexibility', body: 'Sourcing, freight and trade execution under one accountable team. No hand-offs between disconnected vendors.' },
-  { title: 'Commercial Clarity', body: 'Transparent pricing structures, clean documentation, and contracts written in plain English. No surprises.' },
-  { title: 'Global Execution Confidence', body: 'Australian operational discipline combined with on-the-ground Indian capability — delivery you can trust.' },
+  { title: 'Single coordination partner', body: 'Sourcing, freight and trade execution under one accountable team. No hand-offs between disconnected vendors.' },
+  { title: 'Unified execution visibility', body: 'Full visibility across the supply chain from origin to delivery through a single point of contact.' },
+  { title: 'Clear accountability', body: 'One team owns the outcome — no gaps between vendors, no finger-pointing when things go wrong.' },
+  { title: 'Coordinated freight', body: 'Multimodal freight handled within the same execution layer, not outsourced to disconnected parties.' },
+  { title: 'Documentation alignment', body: 'Clean, consistent documentation across sourcing, logistics and trade — no compliance gaps.' },
+  { title: 'Faster commercial movement', body: 'Aligned communication and ownership accelerates decision-making and reduces commercial delays.' },
+  { title: 'Reliable sourcing continuity', body: 'Established supplier networks with backup pathways ensure supply continuity under market pressure.' },
   { title: 'Operational Assurance', body: 'Chain of Responsibility ownership, HSE compliance and documentation control built into every movement.' },
 ];
 
 export const fragmentedRisks = [
-  'Accountability gaps between vendors',
-  'Coordination failures across hand-offs',
-  'Compliance exposure on shared movements',
-  'Documentation breakdowns',
-  'Delivery and timing uncertainty',
-  'Execution risk in critical routes',
+  'Multiple vendors to coordinate',
+  'Disconnected communication',
+  'Unclear accountability',
+  'Freight uncertainty',
+  'Compliance friction',
+  'Slower decision cycle',
+  'Unreliable sourcing continuity',
 ];
 
 export const values = [
@@ -302,10 +310,10 @@ export const values = [
 
 export const leadership = [
   {
-    name: 'Raji Krishnan',
+    name: 'Mr. Rajwinder Singh',
     role: 'Managing Director',
     location: 'Sydney, Australia',
-    initials: 'RK',
+    initials: 'RS',
     note: 'Operational leadership across integrated supply, logistics and international trade. Responsible for execution discipline and compliance.',
   },
   {

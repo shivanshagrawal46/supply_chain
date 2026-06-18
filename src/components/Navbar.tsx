@@ -35,23 +35,41 @@ export default function Navbar() {
         style={navStyles}
       >
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <a href="#top" style={{ display: 'flex', alignItems: 'flex-start', gap: 5 }}>
+          <a href="#top" style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
             <span
               style={{
-                fontSize: 28,
-                fontWeight: 800,
-                letterSpacing: '-0.05em',
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 40,
+                fontWeight: 900,
+                letterSpacing: '-0.06em',
                 lineHeight: 1,
                 color: 'var(--ink)',
               }}
             >
               RIVER
             </span>
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: 28, paddingTop: 3 }}>
+            {/* GLOBAL column sized to match RIVER's cap-height (≈ 30px at 40px font) */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: 30,
+                marginTop: 5,
+              }}
+            >
               {'GLOBAL'.split('').map((c, i) => (
                 <span
                   key={i}
-                  style={{ fontSize: 6.5, fontWeight: 700, letterSpacing: '0.2em', lineHeight: 1, color: 'var(--ink)' }}
+                  style={{
+                    fontSize: 6.2,
+                    fontWeight: 800,
+                    letterSpacing: '0.14em',
+                    lineHeight: 0.75,
+                    color: 'var(--ink)',
+                    height: 4.6,
+                    display: 'block',
+                  }}
                 >
                   {c}
                 </span>
@@ -59,10 +77,10 @@ export default function Navbar() {
             </div>
             <span
               style={{
-                fontSize: 9,
-                fontWeight: 500,
+                fontSize: 11,
+                fontWeight: 600,
                 color: 'var(--ink)',
-                marginTop: 2,
+                marginTop: 4,
                 letterSpacing: '0.05em',
               }}
             >

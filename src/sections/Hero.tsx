@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowUpRight, ArrowDown, Anchor, Globe2, ShieldCheck, Truck, Ship, Wheat, Factory,
@@ -25,23 +24,6 @@ const trustedSectors = [
 ];
 
 export default function Hero() {
-  const [time, setTime] = useState('');
-
-  useEffect(() => {
-    const tick = () => {
-      const opts: Intl.DateTimeFormatOptions = {
-        timeZone: 'Australia/Sydney',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      };
-      setTime(new Intl.DateTimeFormat('en-AU', opts).format(new Date()));
-    };
-    tick();
-    const id = setInterval(tick, 30000);
-    return () => clearInterval(id);
-  }, []);
-
   return (
     <section
       id="top"
@@ -82,7 +64,7 @@ export default function Hero() {
           top: 0,
           right: 0,
           bottom: 56, // leaves space for the trust strip
-          width: '48%',
+          width: '60%',
           overflow: 'hidden',
           zIndex: 2,
         }}
@@ -95,17 +77,17 @@ export default function Hero() {
           style={{
             width: '100%',
             height: '100%',
-            backgroundImage: 'url(/supply.jpeg)',
+            backgroundImage: 'url(/supply.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: 'contrast(1.04) saturate(0.86) brightness(0.94)',
+            filter: 'contrast(1.04) saturate(0.88) brightness(0.95)',
             WebkitMaskImage: `
-              linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.08) 8%, rgba(0,0,0,0.28) 16%, rgba(0,0,0,0.55) 24%, rgba(0,0,0,0.82) 32%, rgba(0,0,0,0.96) 40%, #000 48%),
-              linear-gradient(180deg, #000 0%, #000 48%, rgba(0,0,0,0.92) 60%, rgba(0,0,0,0.62) 76%, rgba(0,0,0,0.28) 88%, rgba(0,0,0,0.08) 95%, transparent 100%)
+              linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.04) 6%, rgba(0,0,0,0.12) 12%, rgba(0,0,0,0.24) 18%, rgba(0,0,0,0.4) 24%, rgba(0,0,0,0.58) 30%, rgba(0,0,0,0.76) 36%, rgba(0,0,0,0.9) 42%, rgba(0,0,0,0.98) 48%, #000 55%, #000 100%),
+              linear-gradient(180deg, #000 0%, #000 50%, rgba(0,0,0,0.9) 64%, rgba(0,0,0,0.6) 78%, rgba(0,0,0,0.28) 90%, rgba(0,0,0,0.08) 96%, transparent 100%)
             `,
             maskImage: `
-              linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.08) 8%, rgba(0,0,0,0.28) 16%, rgba(0,0,0,0.55) 24%, rgba(0,0,0,0.82) 32%, rgba(0,0,0,0.96) 40%, #000 48%),
-              linear-gradient(180deg, #000 0%, #000 48%, rgba(0,0,0,0.92) 60%, rgba(0,0,0,0.62) 76%, rgba(0,0,0,0.28) 88%, rgba(0,0,0,0.08) 95%, transparent 100%)
+              linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.04) 6%, rgba(0,0,0,0.12) 12%, rgba(0,0,0,0.24) 18%, rgba(0,0,0,0.4) 24%, rgba(0,0,0,0.58) 30%, rgba(0,0,0,0.76) 36%, rgba(0,0,0,0.9) 42%, rgba(0,0,0,0.98) 48%, #000 55%, #000 100%),
+              linear-gradient(180deg, #000 0%, #000 50%, rgba(0,0,0,0.9) 64%, rgba(0,0,0,0.6) 78%, rgba(0,0,0,0.28) 90%, rgba(0,0,0,0.08) 96%, transparent 100%)
             `,
             WebkitMaskComposite: 'source-in',
             maskComposite: 'intersect',
@@ -122,18 +104,38 @@ export default function Hero() {
             position: 'absolute',
             inset: 0,
             background:
-              'linear-gradient(180deg, rgba(250,250,247,0.06) 0%, rgba(14,85,96,0.08) 55%, rgba(14,85,96,0.05) 85%)',
+              'linear-gradient(180deg, rgba(250,250,247,0.05) 0%, rgba(14,85,96,0.06) 55%, rgba(14,85,96,0.04) 85%)',
             mixBlendMode: 'multiply',
             WebkitMaskImage: `
-              linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.3) 22%, #000 48%),
-              linear-gradient(180deg, #000 0%, #000 50%, rgba(0,0,0,0.6) 78%, transparent 100%)
+              linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.3) 18%, rgba(0,0,0,0.72) 32%, #000 50%),
+              linear-gradient(180deg, #000 0%, rgba(0,0,0,0.7) 75%, transparent 100%)
             `,
             maskImage: `
-              linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.3) 22%, #000 48%),
-              linear-gradient(180deg, #000 0%, #000 50%, rgba(0,0,0,0.6) 78%, transparent 100%)
+              linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.3) 18%, rgba(0,0,0,0.72) 32%, #000 50%),
+              linear-gradient(180deg, #000 0%, rgba(0,0,0,0.7) 75%, transparent 100%)
             `,
             WebkitMaskComposite: 'source-in',
             maskComposite: 'intersect',
+          }}
+        />
+
+
+        {/* Paper-tinted bridge — covers left half only, fully out before the boat zone */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: `linear-gradient(95deg,
+              var(--paper) 0%,
+              rgba(250,250,247,0.92) 10%,
+              rgba(250,250,247,0.72) 18%,
+              rgba(250,250,247,0.46) 26%,
+              rgba(250,250,247,0.22) 34%,
+              rgba(250,250,247,0.08) 42%,
+              transparent 50%
+            )`,
+            pointerEvents: 'none',
+            zIndex: 1,
           }}
         />
 
@@ -147,9 +149,9 @@ export default function Hero() {
               'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'320\' height=\'320\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.4\'/></svg>")',
             mixBlendMode: 'overlay',
             WebkitMaskImage:
-              'linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.7) 10%, transparent 28%)',
+              'linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.55) 12%, rgba(0,0,0,0.5) 24%, rgba(0,0,0,0.15) 36%, transparent 48%)',
             maskImage:
-              'linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.7) 10%, transparent 28%)',
+              'linear-gradient(95deg, transparent 0%, rgba(0,0,0,0.55) 12%, rgba(0,0,0,0.5) 24%, rgba(0,0,0,0.15) 36%, transparent 48%)',
             pointerEvents: 'none',
           }}
         />
@@ -171,131 +173,10 @@ export default function Hero() {
           }}
         />
 
-        {/* Live operations chip — top right of image, with coords beneath */}
-        <motion.div
-          initial={{ opacity: 0, x: -8 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.6, duration: 0.5 }}
-          style={{
-            position: 'absolute',
-            top: 130,
-            right: 32,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            gap: 10,
-            zIndex: 5,
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              color: 'rgba(255,255,255,0.95)',
-              fontSize: 10,
-              fontWeight: 600,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              padding: '6px 12px',
-              background: 'rgba(10,10,10,0.5)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: 999,
-              border: '1px solid rgba(255,255,255,0.14)',
-            }}
-          >
-            <motion.span
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 1.6, repeat: Infinity }}
-              style={{ width: 5, height: 5, borderRadius: '50%', background: '#22d3ee' }}
-            />
-            Cargo · In transit
-          </div>
-          <div
-            style={{
-              color: 'rgba(255,255,255,0.78)',
-              fontSize: 10,
-              fontFamily: 'JetBrains Mono, monospace',
-              letterSpacing: '0.12em',
-              textShadow: '0 1px 2px rgba(10,10,10,0.4)',
-            }}
-          >
-            27.4°S · 153.0°E  ·  BULK CARRIER
-          </div>
-        </motion.div>
-
-        {/* Vertical "RIVER · MMXXVI" editorial signature at right edge — in solid zone */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 0.7 }}
-          className="vert-sig"
-          style={{
-            position: 'absolute',
-            right: 12,
-            top: '38%',
-            transform: 'translateY(-50%) rotate(-90deg)',
-            transformOrigin: 'center',
-            color: 'rgba(255,255,255,0.42)',
-            fontSize: 10,
-            letterSpacing: '0.4em',
-            fontWeight: 500,
-            whiteSpace: 'nowrap',
-            fontFamily: 'JetBrains Mono, monospace',
-            textTransform: 'uppercase',
-            zIndex: 4,
-          }}
-        >
-          River Global · MMXXVI · Sydney
-        </motion.div>
       </motion.div>
 
-      {/* ============ TOP META BAR ============ */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.15, duration: 0.5 }}
-        style={{ position: 'relative', zIndex: 5, paddingTop: 100 }}
-      >
-        <div
-          className="container"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 16,
-            fontSize: 11,
-            color: 'var(--muted)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            fontWeight: 500,
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span
-                className="pulse"
-                style={{
-                  width: 6, height: 6, borderRadius: '50%',
-                  background: 'var(--river)',
-                  display: 'inline-block', position: 'relative',
-                }}
-              />
-              Operations live
-            </span>
-            <span style={{ color: 'var(--line-2)' }}>·</span>
-            <span className="mono" style={{ letterSpacing: '0.1em' }}>SYD {time}</span>
-          </div>
-          <div className="top-meta-right" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span>AU</span>
-            <span style={{ color: 'var(--line-2)' }}>×</span>
-            <span>IN</span>
-            <span style={{ color: 'var(--line-2)' }}>·</span>
-            <span className="mono">VOL.01 / 2026</span>
-          </div>
-        </div>
-      </motion.div>
+      {/* ============ TOP SPACER ============ */}
+      <div style={{ paddingTop: 100 }} />
 
       {/* ============ MAIN CONTENT ============ */}
       <div
@@ -312,77 +193,35 @@ export default function Hero() {
         }}
       >
         <div className="hero-text-col">
-          {/* Editorial staircase headline */}
+          {/* 3-line headline — premium display sans, all caps */}
           <h1
             style={{
-              fontSize: 'clamp(40px, 5.4vw, 86px)',
-              lineHeight: 0.96,
-              letterSpacing: '-0.045em',
-              fontWeight: 500,
+              fontFamily: "'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+              fontSize: 'clamp(28px, 3.2vw, 50px)',
+              lineHeight: 1.16,
+              letterSpacing: '0.01em',
+              fontWeight: 600,
               color: 'var(--ink)',
-              marginBottom: 30,
+              marginBottom: 26,
               position: 'relative',
             }}
           >
-            {/* Line 1 — "Integrated supply," */}
-            <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.08em' }}>
-              <motion.span
-                custom={0}
-                variants={lineVariants}
-                initial="hidden"
-                animate="visible"
-                style={{ display: 'inline-block' }}
-              >
-                Integrated{' '}
-                <span
-                  className="serif"
-                  style={{
-                    fontStyle: 'italic',
-                    color: 'var(--river)',
-                    fontWeight: 400,
-                    letterSpacing: '-0.02em',
-                    fontSize: '1.05em',
-                  }}
-                >
-                  supply
-                </span>
-                <span style={{ color: 'var(--muted-2)', fontWeight: 400 }}>,</span>
+            {/* Line 1 — all black */}
+            <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.05em' }}>
+              <motion.span custom={0} variants={lineVariants} initial="hidden" animate="visible" style={{ display: 'inline-block' }}>
+                INTEGRATED SUPPLY
               </motion.span>
             </span>
-
-            {/* Line 2 — "coordinated globally." flush left, matching line 1 */}
+            {/* Line 2 — all black */}
             <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.05em' }}>
-              <motion.span
-                custom={1}
-                variants={lineVariants}
-                initial="hidden"
-                animate="visible"
-                style={{ display: 'inline-block' }}
-              >
-                <span
-                  className="serif"
-                  style={{
-                    fontStyle: 'italic',
-                    color: 'var(--river)',
-                    fontWeight: 400,
-                    letterSpacing: '-0.02em',
-                    fontSize: '1.08em',
-                  }}
-                >
-                  coordinated
-                </span>{' '}
-                globally
-                <span
-                  className="serif"
-                  style={{
-                    color: 'var(--river)',
-                    fontStyle: 'italic',
-                    fontSize: '1.1em',
-                    marginLeft: '-0.04em',
-                  }}
-                >
-                  .
-                </span>
+              <motion.span custom={1} variants={lineVariants} initial="hidden" animate="visible" style={{ display: 'inline-block' }}>
+                COORDINATED LOGISTICS
+              </motion.span>
+            </span>
+            {/* Line 3 — full teal accent */}
+            <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.05em' }}>
+              <motion.span custom={2} variants={lineVariants} initial="hidden" animate="visible" style={{ display: 'inline-block', color: 'var(--river-soft)' }}>
+                CONFIDENT GLOBAL TRADE
               </motion.span>
             </span>
           </h1>
@@ -391,31 +230,31 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.3, duration: 0.6, ease }}
+            transition={{ delay: 1.4, duration: 0.6, ease }}
             style={{
-              fontSize: 'clamp(14.5px, 1.1vw, 16.5px)',
-              lineHeight: 1.5,
+              fontSize: 'clamp(13.5px, 1vw, 15.5px)',
+              lineHeight: 1.6,
               color: 'var(--ink-soft)',
-              maxWidth: 460,
+              maxWidth: 480,
               marginBottom: 28,
             }}
           >
-            One accountable team for sourcing, freight and international trade —
-            built on Australian operational discipline and the Chain of Responsibility framework.
+            River Global is an Australian supply and trade partner connecting sourcing, logistics,
+            trade coordination and international trade into one integrated execution platform.
           </motion.p>
 
           {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.45, duration: 0.6, ease }}
+            transition={{ delay: 1.55, duration: 0.6, ease }}
             style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 36 }}
           >
-            <a href="#contact" className="btn">
-              Request sourcing <ArrowUpRight size={14} />
+            <a href="#capabilities" className="btn">
+              Explore capabilities <ArrowUpRight size={14} />
             </a>
-            <a href="#capabilities" className="btn btn-ghost">
-              How we operate
+            <a href="#contact" className="btn btn-ghost">
+              Talk to us
             </a>
           </motion.div>
 
@@ -584,16 +423,19 @@ export default function Hero() {
       {/* ============ Responsive ============ */}
       <style>{`
         .hero-text-col {
-          max-width: 56%;
+          max-width: 58%;
+        }
+        .hero-text-col h1 span {
+          white-space: nowrap;
         }
 
         @media (max-width: 1280px) {
-          .hero-text-col { max-width: 58%; }
+          .hero-text-col { max-width: 62%; }
         }
 
         @media (max-width: 1100px) {
-          .hero-text-col { max-width: 60%; }
-          .hero-image-bleed { width: 44% !important; }
+          .hero-text-col { max-width: 66%; }
+          .hero-image-bleed { width: 56% !important; }
         }
 
         @media (max-width: 900px) {
@@ -606,11 +448,9 @@ export default function Hero() {
             bottom: auto !important;
             margin-top: 32px;
           }
-          .vert-sig { display: none !important; }
         }
 
         @media (max-width: 600px) {
-          .top-meta-right span:nth-child(n+4) { display: none; }
           .hero-metrics { gap: 18px !important; }
         }
       `}</style>

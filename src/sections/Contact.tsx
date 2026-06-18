@@ -6,9 +6,9 @@ export default function Contact() {
   const { ref, inView } = useInView({ threshold: 0.15, triggerOnce: true });
 
   const contactItems = [
-    { icon: Mail, label: 'Email', value: 'hello@riverglobal.com.au', href: 'mailto:hello@riverglobal.com.au' },
+    { icon: Mail, label: 'Email', value: 'contact@riverglobal.com.au', href: 'mailto:contact@riverglobal.com.au' },
     { icon: Phone, label: 'Phone (AU)', value: '+61 2 0000 0000', href: 'tel:+61200000000' },
-    { icon: MapPin, label: 'Headquarters', value: 'Sydney, Australia · Mumbai, India', href: null },
+    { icon: MapPin, label: 'Offices', value: 'Adelaide, Australia · Delhi, India', href: null },
     { icon: Clock, label: 'Response time', value: 'Within one business day', href: null },
   ];
 
@@ -22,15 +22,10 @@ export default function Contact() {
           style={{ marginBottom: 56 }}
         >
           <span className="eyebrow" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            10 — Contact
+            TALK TO US
           </span>
           <h2 className="h1" style={{ marginTop: 20, color: 'var(--paper)' }}>
-            Talk to the
-            <br />
-            <span className="serif" style={{ fontStyle: 'italic', color: 'var(--river-mist)' }}>
-              operations
-            </span>{' '}
-            team.
+            <span style={{ color: 'var(--river-mist)' }}>TALK TO US</span>
           </h2>
           <p
             style={{
@@ -158,7 +153,7 @@ export default function Contact() {
             </p>
           </div>
           <a
-            href="mailto:hello@riverglobal.com.au"
+            href="mailto:contact@riverglobal.com.au"
             className="btn btn-light"
             style={{ whiteSpace: 'nowrap' }}
           >

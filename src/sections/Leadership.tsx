@@ -16,10 +16,10 @@ export default function Leadership() {
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20, marginBottom: 60 }}
         >
           <div style={{ maxWidth: 720 }}>
-            <span className="eyebrow">09 — Leadership</span>
-            <h2 className="h1" style={{ marginTop: 24 }}>
-              The team behind<br />
-              the <span className="serif" style={{ fontStyle: 'italic' }}>execution</span>.
+            <span className="eyebrow">LEADERSHIP</span>
+            <h2 className="h1" style={{ marginTop: 22 }}>
+              THE TEAM BEHIND<br />
+              <span style={{ color: 'var(--river)' }}>THE EXECUTION</span>
             </h2>
           </div>
           <p className="body" style={{ maxWidth: 360 }}>

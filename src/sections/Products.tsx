@@ -1,27 +1,505 @@
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Modal } from 'antd';
-import { ArrowUpRight, X, Download, FileText, CheckCircle2, Plus } from 'lucide-react';
-import { products, productCategories, type Product } from '../data/siteData';
+import { ArrowUpRight, X, CheckCircle2 } from 'lucide-react';
+
+type ProductDetail = {
+  id: string;
+  name: string;
+  formula?: string;
+  description: string;
+  applications: string[];
+  specifications: { label: string; value: string }[];
+  compliance: string[];
+};
+
+type Category = {
+  id: string;
+  title: string;
+  desc: string;
+  products: ProductDetail[];
+};
+
+const CATALOGUE: Category[] = [
+  {
+    id: 'fracs',
+    title: 'FRACS & PROPPANTS',
+    desc: 'Premium proppant grade for oilfield completion programs sourced to specification with coordinated field logistics.',
+    products: [
+      {
+        id: '100-mesh',
+        name: '100 Mesh',
+        formula: '100M',
+        description: 'High-purity 100 mesh frac sand engineered for hydraulic fracturing in tight formations — sourced to API specification with consistent grain distribution.',
+        applications: ['Hydraulic fracturing', 'Unconventional plays', 'Slickwater completions', 'Tight gas reservoirs'],
+        specifications: [
+          { label: 'Mesh size', value: '100' },
+          { label: 'Sphericity / Roundness', value: '≥ 0.7 / 0.7' },
+          { label: 'Crush resistance', value: 'API RP 19C compliant' },
+          { label: 'Packaging', value: 'Bulk pneumatic / 1 MT bags' },
+        ],
+        compliance: ['API RP 19C', 'ISO 13503-2', 'Field logistics coordinated'],
+      },
+      {
+        id: '40-70',
+        name: '40 / 70',
+        formula: '40/70',
+        description: 'Intermediate frac sand grade balancing conductivity and proppant flowback control for medium-pressure completions.',
+        applications: ['Conventional fracturing', 'Sandstone reservoirs', 'Tight oil completions'],
+        specifications: [
+          { label: 'Mesh range', value: '40 – 70' },
+          { label: 'Sphericity / Roundness', value: '≥ 0.7 / 0.7' },
+          { label: 'Crush strength', value: '6K psi grade' },
+          { label: 'Packaging', value: 'Bulk / 1 MT bags' },
+        ],
+        compliance: ['API RP 19C', 'ISO 13503-2'],
+      },
+      {
+        id: '40-140',
+        name: '40 / 140',
+        formula: '40/140',
+        description: 'Wide-range frac sand designed for varied fracture geometry and improved propped fracture coverage.',
+        applications: ['Multi-stage completions', 'Variable formation profiles', 'Hybrid frac designs'],
+        specifications: [
+          { label: 'Mesh range', value: '40 – 140' },
+          { label: 'Sphericity / Roundness', value: '≥ 0.7 / 0.7' },
+          { label: 'Crush strength', value: '6K – 8K psi grades' },
+          { label: 'Packaging', value: 'Bulk transport' },
+        ],
+        compliance: ['API RP 19C', 'ISO 13503-2'],
+      },
+      {
+        id: '70-140',
+        name: '70 / 140',
+        formula: '70/140',
+        description: 'Fine-grade proppant for high-pressure tight reservoirs requiring deeper fracture penetration with controlled conductivity.',
+        applications: ['Deep tight formations', 'Slickwater fracs', 'Stacked completion programs'],
+        specifications: [
+          { label: 'Mesh range', value: '70 – 140' },
+          { label: 'Sphericity / Roundness', value: '≥ 0.7 / 0.7' },
+          { label: 'Crush resistance', value: 'High-stress grades' },
+          { label: 'Packaging', value: 'Bulk pneumatic' },
+        ],
+        compliance: ['API RP 19C', 'ISO 13503-2'],
+      },
+      {
+        id: 'custom-proppant',
+        name: 'Custom Proppant Specifications',
+        formula: 'CPS',
+        description: 'Bespoke proppant blends and grades engineered to client well specifications — including resin-coated and ceramic alternatives where required.',
+        applications: ['Client-specific reservoir programs', 'Resin-coated proppant blends', 'Ceramic proppant supply'],
+        specifications: [
+          { label: 'Mesh range', value: 'Custom' },
+          { label: 'Coating', value: 'Optional resin / ceramic' },
+          { label: 'Sourcing', value: 'Pathway development included' },
+          { label: 'Logistics', value: 'Field-side coordinated' },
+        ],
+        compliance: ['API RP 19C', 'ISO 13503-2', 'Custom QA program'],
+      },
+    ],
+  },
+  {
+    id: 'minerals',
+    title: 'INDUSTRIAL MINERALS',
+    desc: 'Verified industrial minerals with quality documentation and logistics coordination.',
+    products: [
+      {
+        id: 'silica-sand',
+        name: 'Silica Sand',
+        formula: 'SiO₂',
+        description: 'High purity silica sand sourced for industrial applications including glass manufacturing, foundry operations and construction inputs.',
+        applications: ['Glass manufacturing', 'Foundry casting', 'Filtration media', 'Construction aggregate'],
+        specifications: [
+          { label: 'Purity (SiO₂)', value: '≥ 99.0%' },
+          { label: 'Grain size', value: '0.1 – 0.8 mm' },
+          { label: 'Moisture', value: '< 0.5%' },
+          { label: 'Packaging', value: 'Bulk / 1 MT bags' },
+        ],
+        compliance: ['ISO 9001', 'REACH registered', 'Australian Workplace standards'],
+      },
+      {
+        id: 'hydrated-lime',
+        name: 'Hydrated Lime',
+        formula: 'Ca(OH)₂',
+        description: 'Calcium hydroxide produced for water treatment, environmental remediation and industrial process applications.',
+        applications: ['Water treatment', 'Flue gas desulphurisation', 'Soil stabilisation', 'pH adjustment'],
+        specifications: [
+          { label: 'Ca(OH)₂ content', value: '≥ 92%' },
+          { label: 'Fineness (200 mesh)', value: '≥ 95%' },
+          { label: 'Bulk density', value: '0.40 – 0.55 g/cm³' },
+          { label: 'Packaging', value: '25 kg bags / Bulk' },
+        ],
+        compliance: ['AS 1672.1', 'Food grade variant available', 'HSE compliant'],
+      },
+      {
+        id: 'quick-lime',
+        name: 'Quicklime',
+        formula: 'CaO',
+        description: 'Calcium oxide for high-temperature industrial processes, metallurgy, water treatment and chemical manufacturing.',
+        applications: ['Steel manufacturing', 'Water treatment', 'Acid neutralisation', 'Soil stabilisation'],
+        specifications: [
+          { label: 'CaO content', value: '≥ 90%' },
+          { label: 'Reactivity', value: 'High / Medium grades' },
+          { label: 'Lump size', value: '5 – 40 mm' },
+          { label: 'Packaging', value: 'Bulk transport' },
+        ],
+        compliance: ['ISO 9001', 'Dangerous goods Class 8'],
+      },
+      {
+        id: 'sodium-silicofluoride',
+        name: 'Sodium Silicofluoride',
+        formula: 'Na₂SiF₆',
+        description: 'Sodium fluosilicate for water fluoridation, glass and enamel manufacturing, and industrial fluorination processes.',
+        applications: ['Water fluoridation', 'Glass & enamel', 'Timber preservation', 'Industrial fluorination'],
+        specifications: [
+          { label: 'Purity', value: '≥ 98%' },
+          { label: 'Form', value: 'Crystalline powder' },
+          { label: 'Packaging', value: '25 kg bags' },
+          { label: 'Handling', value: 'Controlled / regulated' },
+        ],
+        compliance: ['AS/NZS standards', 'Dangerous goods compliant'],
+      },
+      {
+        id: 'activated-carbon',
+        name: 'Activated Carbon',
+        formula: 'C',
+        description: 'High surface area carbon for purification, filtration and adsorption applications across industries.',
+        applications: ['Water purification', 'Gas treatment', 'Gold recovery', 'Air filtration'],
+        specifications: [
+          { label: 'Surface area', value: '900 – 1200 m²/g' },
+          { label: 'Iodine number', value: '≥ 1000 mg/g' },
+          { label: 'Moisture', value: '< 5%' },
+          { label: 'Form', value: 'Granular / Powder' },
+        ],
+        compliance: ['NSF certified options', 'Food grade available'],
+      },
+      {
+        id: 'agricultural-lime',
+        name: 'Agricultural Lime',
+        formula: 'CaCO₃',
+        description: 'Calcium carbonate-based agricultural lime for soil pH correction, calcium supply, and yield optimisation in broadacre farming.',
+        applications: ['Soil pH correction', 'Pasture improvement', 'Broadacre cropping', 'Calcium supplementation'],
+        specifications: [
+          { label: 'CaCO₃ content', value: '≥ 90%' },
+          { label: 'Neutralising value', value: '≥ 95%' },
+          { label: 'Moisture', value: '< 2%' },
+          { label: 'Packaging', value: 'Bulk delivery' },
+        ],
+        compliance: ['AS 4454', 'Approved agricultural input'],
+      },
+      {
+        id: 'aggregates',
+        name: 'Aggregates',
+        formula: 'AGG',
+        description: 'Quality-controlled construction aggregates for civil infrastructure, concrete production and large-scale building programs.',
+        applications: ['Concrete production', 'Road base', 'Civil infrastructure', 'Drainage'],
+        specifications: [
+          { label: 'Grading', value: 'Per client specification' },
+          { label: 'Source', value: 'Quarried & screened' },
+          { label: 'Quality', value: 'AS 2758 compliant' },
+          { label: 'Supply', value: 'Bulk haulage' },
+        ],
+        compliance: ['AS 2758', 'Civil engineering grade'],
+      },
+      {
+        id: 'crushed-rock',
+        name: 'Crushed Rock',
+        formula: 'CR',
+        description: 'Sized crushed rock supply for road construction, drainage layers and structural fill applications.',
+        applications: ['Road construction', 'Structural fill', 'Drainage layers', 'Civil works'],
+        specifications: [
+          { label: 'Size range', value: '5 – 65 mm grades' },
+          { label: 'Density', value: '1.4 – 1.8 t/m³' },
+          { label: 'Classification', value: 'AS 2758.2' },
+          { label: 'Supply', value: 'Bulk haulage' },
+        ],
+        compliance: ['AS 2758.2', 'Geotechnical certified'],
+      },
+    ],
+  },
+  {
+    id: 'ag-inputs',
+    title: 'AGRICULTURAL INPUTS & FERTILIZERS',
+    desc: 'Advanced crop nutrition, fertilizers, and agricultural inputs for large-scale operations.',
+    products: [
+      {
+        id: 'nano-urea',
+        name: 'Nano Urea',
+        formula: 'N₂H₄CO',
+        description: 'Liquid nano-urea formulation for foliar application — improved nitrogen use efficiency and reduced environmental footprint.',
+        applications: ['Foliar nutrition', 'Precision agriculture', 'Sustainable farming'],
+        specifications: [
+          { label: 'Nitrogen content', value: '4% (w/v)' },
+          { label: 'Particle size', value: '< 100 nm' },
+          { label: 'Application rate', value: '2 – 4 mL/L water' },
+          { label: 'Pack size', value: '500 mL bottles' },
+        ],
+        compliance: ['Approved fertiliser', 'Environmental safety assessed'],
+      },
+      {
+        id: 'nano-dap',
+        name: 'Nano DAP',
+        formula: 'Nano',
+        description: 'Nanoscale diammonium phosphate for efficient delivery of nitrogen and phosphorus nutrients to crops.',
+        applications: ['Soil & foliar application', 'Cereal crops', 'High-value horticulture'],
+        specifications: [
+          { label: 'N content', value: '8.0%' },
+          { label: 'P₂O₅ content', value: '16.0%' },
+          { label: 'Particle size', value: '< 100 nm' },
+          { label: 'Pack size', value: '500 mL / 1 L' },
+        ],
+        compliance: ['Fertiliser registration', 'Toxicity tested'],
+      },
+      {
+        id: 'advanced-tech',
+        name: 'Advanced New Technologies',
+        formula: 'ANT',
+        description: 'Next-generation crop nutrition technologies including controlled-release and biostimulant inputs for precision agriculture.',
+        applications: ['Precision agriculture', 'Sustainable farming', 'High-value horticulture'],
+        specifications: [
+          { label: 'Product types', value: 'Controlled-release, biostimulants' },
+          { label: 'Application', value: 'Variable rate compatible' },
+          { label: 'Sourcing', value: 'Curated technology partners' },
+          { label: 'Pack size', value: 'Per crop program' },
+        ],
+        compliance: ['Registered for agricultural use', 'Environmental assessed'],
+      },
+      {
+        id: 'dap',
+        name: 'DAP',
+        formula: 'DAP',
+        description: 'Diammonium phosphate fertiliser — high analysis source of nitrogen and phosphorus for broadacre cropping.',
+        applications: ['Cereal crops', 'Oilseeds', 'Pulses', 'Pasture establishment'],
+        specifications: [
+          { label: 'N content', value: '18%' },
+          { label: 'P content', value: '20%' },
+          { label: 'Granule size', value: '2 – 4 mm' },
+          { label: 'Packaging', value: '1 MT bags / Bulk' },
+        ],
+        compliance: ['Fertiliser standards', 'Quality assured'],
+      },
+      {
+        id: 'map',
+        name: 'MAP',
+        formula: 'MAP',
+        description: 'Monoammonium phosphate fertiliser — high phosphorus content with lower nitrogen for starter applications.',
+        applications: ['Crop establishment', 'Starter fertiliser', 'Acidic soil applications'],
+        specifications: [
+          { label: 'N content', value: '11%' },
+          { label: 'P content', value: '22%' },
+          { label: 'Form', value: 'Granular' },
+          { label: 'Packaging', value: '1 MT bags / Bulk' },
+        ],
+        compliance: ['Fertiliser standards', 'Quality assured'],
+      },
+      {
+        id: 'urea',
+        name: 'Urea',
+        formula: 'CO(NH₂)₂',
+        description: 'Granular urea — concentrated nitrogen fertiliser for broadacre cropping, pasture and side-dress applications.',
+        applications: ['Cereal nitrogen', 'Pasture fertilising', 'Side-dressing', 'Topdressing'],
+        specifications: [
+          { label: 'N content', value: '46%' },
+          { label: 'Form', value: 'Prilled / Granular' },
+          { label: 'Biuret', value: '< 1.0%' },
+          { label: 'Packaging', value: 'Bulk / 1 MT bags' },
+        ],
+        compliance: ['Fertiliser standards', 'Quality assured'],
+      },
+      {
+        id: 'npk',
+        name: 'NPK Blends',
+        formula: 'NPK',
+        description: 'Custom-blended NPK fertilisers tailored to crop and soil requirements with optional micronutrient inclusion.',
+        applications: ['Custom crop programs', 'Horticulture', 'Broadacre cropping'],
+        specifications: [
+          { label: 'Ratios', value: 'Custom blended' },
+          { label: 'Form', value: 'Granular' },
+          { label: 'Inclusions', value: 'Optional micronutrients' },
+          { label: 'Packaging', value: '1 MT bags / Bulk' },
+        ],
+        compliance: ['Fertiliser standards', 'Blended to specification'],
+      },
+      {
+        id: 'micronutrients',
+        name: 'Micronutrients',
+        formula: 'µ',
+        description: 'Targeted micronutrient products — zinc, boron, manganese and iron — for correcting soil and crop deficiencies.',
+        applications: ['Deficiency correction', 'Foliar application', 'Specialty crops'],
+        specifications: [
+          { label: 'Nutrients', value: 'Zn, B, Mn, Fe, Cu' },
+          { label: 'Form', value: 'Granular / Liquid' },
+          { label: 'Application', value: 'Soil or foliar' },
+          { label: 'Pack size', value: 'Per program' },
+        ],
+        compliance: ['Agricultural input registered'],
+      },
+      {
+        id: 'soil-conditioners',
+        name: 'Soil Conditioners',
+        formula: 'SC',
+        description: 'Soil conditioning products including gypsum, organic amendments and biochar for soil structure and chemistry improvement.',
+        applications: ['Soil structure improvement', 'Sodic soil management', 'Carbon retention'],
+        specifications: [
+          { label: 'Products', value: 'Gypsum, organic, biochar' },
+          { label: 'Form', value: 'Granular / Bulk' },
+          { label: 'Application', value: 'Soil incorporation' },
+          { label: 'Packaging', value: 'Bulk / 1 MT bags' },
+        ],
+        compliance: ['Agricultural input certified'],
+      },
+    ],
+  },
+  {
+    id: 'chemicals',
+    title: 'CHEMICALS & REAGENTS',
+    desc: 'Industrial chemicals, mining reagents, and specialty products with compliant documentation and logistics.',
+    products: [
+      {
+        id: 'industrial-chemicals',
+        name: 'Industrial Chemicals',
+        formula: 'IC',
+        description: 'Bulk industrial chemicals across acids, bases, solvents and process inputs sourced with full documentation and SDS compliance.',
+        applications: ['Process manufacturing', 'Cleaning agents', 'Industrial processes'],
+        specifications: [
+          { label: 'Product range', value: 'Acids, bases, solvents' },
+          { label: 'Grades', value: 'Industrial / Technical' },
+          { label: 'Supply', value: 'Drum / IBC / Bulk' },
+          { label: 'Documentation', value: 'Full SDS package' },
+        ],
+        compliance: ['REACH', 'SDS compliant', 'Dangerous goods certified'],
+      },
+      {
+        id: 'mining-reagents',
+        name: 'Mining Reagents',
+        formula: 'MR',
+        description: 'Flotation reagents, collectors, depressants and frothers for mineral processing across base and precious metal operations.',
+        applications: ['Mineral flotation', 'Leaching processes', 'Tailings management'],
+        specifications: [
+          { label: 'Reagent types', value: 'Collectors, frothers, modifiers' },
+          { label: 'Form', value: 'Liquid / Granular' },
+          { label: 'Supply', value: 'IBC / Drum / Bulk' },
+          { label: 'Sourcing', value: 'Specification-matched' },
+        ],
+        compliance: ['HSE compliant', 'Mining sector approved'],
+      },
+      {
+        id: 'water-treatment',
+        name: 'Water Treatment Chemicals',
+        formula: 'WTC',
+        description: 'Coagulants, flocculants, pH adjusters and disinfectants for municipal, industrial and mine site water treatment applications.',
+        applications: ['Municipal water', 'Industrial process water', 'Mine site water', 'Wastewater treatment'],
+        specifications: [
+          { label: 'Categories', value: 'Coagulants, flocculants, pH' },
+          { label: 'Standards', value: 'NSF / Drinking water grade' },
+          { label: 'Supply', value: 'Drum / Bulk' },
+          { label: 'Documentation', value: 'Compliance certificates' },
+        ],
+        compliance: ['NSF certified options', 'AS/NZS 4020'],
+      },
+      {
+        id: 'specialty-products',
+        name: 'Specialty Industrial Products',
+        formula: 'SIP',
+        description: 'Specialty chemicals and process inputs sourced for niche industrial applications with custom supply pathways.',
+        applications: ['Specialty manufacturing', 'Pharmaceutical inputs', 'Niche industrial processes'],
+        specifications: [
+          { label: 'Sourcing', value: 'Custom pathway' },
+          { label: 'Documentation', value: 'Full QA & compliance' },
+          { label: 'Supply', value: 'Per requirement' },
+          { label: 'Lead time', value: 'Project-specific' },
+        ],
+        compliance: ['QA tracked', 'Application-specific certified'],
+      },
+    ],
+  },
+  {
+    id: 'bulk',
+    title: 'BULK COMMODITIES',
+    desc: 'Bulk commodity supply with domestic and international trade pathway coordination.',
+    products: [
+      {
+        id: 'bulk-supply',
+        name: 'Bulk Commodity Supply',
+        formula: 'BCS',
+        description: 'Large-volume commodity supply across grains, minerals and industrial inputs — coordinated with freight and trade documentation.',
+        applications: ['Industrial consumers', 'Trading houses', 'Manufacturers', 'Government tenders'],
+        specifications: [
+          { label: 'Volume', value: 'Container to vessel load' },
+          { label: 'Commodities', value: 'Grains, minerals, inputs' },
+          { label: 'Quality', value: 'Origin-certified' },
+          { label: 'Documentation', value: 'Full trade package' },
+        ],
+        compliance: ['Origin certification', 'Quality assured', 'Customs ready'],
+      },
+      {
+        id: 'containerized',
+        name: 'Containerized Movement',
+        formula: 'CTR',
+        description: 'Containerised commodity movement with consolidated freight, customs handling and last-mile delivery coordination.',
+        applications: ['FCL & LCL movements', 'Multi-modal transport', 'Cross-border container freight'],
+        specifications: [
+          { label: 'Container types', value: '20ft / 40ft / Reefer / Open-top' },
+          { label: 'Modes', value: 'Sea / Road / Rail' },
+          { label: 'Routing', value: 'Port-to-door' },
+          { label: 'Tracking', value: 'Shipment visibility' },
+        ],
+        compliance: ['IMDG compliant', 'Customs documentation'],
+      },
+      {
+        id: 'domestic-pathways',
+        name: 'Domestic Supply Pathways',
+        formula: 'DSP',
+        description: 'Australian domestic supply coordination — connecting producers, processors and end-users across the country with logistics oversight.',
+        applications: ['Inter-state supply', 'Australian manufacturers', 'Domestic processors'],
+        specifications: [
+          { label: 'Coverage', value: 'Nationwide' },
+          { label: 'Modes', value: 'Road / Rail' },
+          { label: 'Coordination', value: 'Single point of contact' },
+          { label: 'Documentation', value: 'Chain of Responsibility' },
+        ],
+        compliance: ['Chain of Responsibility', 'HSE compliant'],
+      },
+      {
+        id: 'international-pathways',
+        name: 'International Trade Pathways',
+        formula: 'ITP',
+        description: 'Cross-border trade execution between Australia, India, and partner markets — including documentation, finance instruments and customs.',
+        applications: ['Import / Export programs', 'Cross-border commodity trade', 'Letter of credit transactions'],
+        specifications: [
+          { label: 'Corridors', value: 'AU · IN · ASEAN · ME' },
+          { label: 'Instruments', value: 'LC / Open account' },
+          { label: 'Documentation', value: 'Full trade pack' },
+          { label: 'Customs', value: 'End-to-end coordinated' },
+        ],
+        compliance: ['Customs / Trade certified', 'Incoterms aligned'],
+      },
+    ],
+  },
+];
+
+// Display order: Fracs → Chemicals → Industrial Minerals → Agricultural → Bulk
+const CATEGORY_ORDER = ['fracs', 'chemicals', 'minerals', 'ag-inputs', 'bulk'];
+const ORDERED_CATALOGUE = CATEGORY_ORDER
+  .map((id) => CATALOGUE.find((c) => c.id === id))
+  .filter((c): c is Category => Boolean(c));
 
 export default function Products() {
-  const [activeCat, setActiveCat] = useState<string>('all');
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [hovered, setHovered] = useState<string | null>(null);
-  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true });
+  const { ref, inView } = useInView({ threshold: 0.08, triggerOnce: true });
+  const [selected, setSelected] = useState<ProductDetail | null>(null);
+  const [selectedCat, setSelectedCat] = useState<string>('');
 
-  const filtered = useMemo(() => {
-    if (activeCat === 'all') return products;
-    return products.filter((p) => p.category === activeCat);
-  }, [activeCat]);
-
-  const tabs = [{ id: 'all', label: 'All Products' }, ...productCategories];
+  const openProduct = (p: ProductDetail, catTitle: string) => {
+    setSelected(p);
+    setSelectedCat(catTitle);
+  };
 
   return (
-    <section id="products" className="section dark" ref={ref}>
+    <section id="products" className="section cream" ref={ref}>
       <div className="container">
-        {/* Section header */}
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -32,448 +510,153 @@ export default function Products() {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: 24,
-            marginBottom: 36,
+            marginBottom: 48,
           }}
         >
           <div style={{ maxWidth: 720 }}>
-            <span className="eyebrow" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              04 — Products & Materials
-            </span>
-            <h2 className="h1" style={{ marginTop: 20, fontSize: 'clamp(34px, 4vw, 56px)' }}>
-              A growing catalogue of <br />
-              <span
-                className="serif"
-                style={{ fontStyle: 'italic', color: 'var(--river-mist)', fontWeight: 400 }}
-              >
-                traceable
-              </span>{' '}
-              materials.
+            <span className="eyebrow">PRODUCTS & MATERIALS</span>
+            <h2 className="h1" style={{ marginTop: 22 }}>
+              A GROWING CATALOGUE OF<br />
+              <span style={{ color: 'var(--river)' }}>TRACEABLE MATERIALS</span>
             </h2>
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: 360, fontSize: 14, lineHeight: 1.65 }}>
-            Industrial minerals, fertilisers, reagents, bulk commodities and gases — each backed by
+          <p className="body" style={{ maxWidth: 380 }}>
+            Industrial minerals, fertilisers, reagents, bulk commodities and proppants — each backed by
             specifications, compliance information and document control.
           </p>
         </motion.div>
 
-        {/* Refined filter bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          style={{
-            display: 'flex',
-            gap: 6,
-            flexWrap: 'wrap',
-            marginBottom: 28,
-            borderTop: '1px solid rgba(255,255,255,0.08)',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            padding: '12px 0',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            {tabs.map((tab) => {
-              const active = activeCat === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveCat(tab.id)}
-                  style={{
-                    background: active ? 'var(--paper)' : 'transparent',
-                    color: active ? 'var(--ink)' : 'rgba(255,255,255,0.65)',
-                    border: `1px solid ${active ? 'var(--paper)' : 'rgba(255,255,255,0.12)'}`,
-                    padding: '7px 14px',
-                    borderRadius: 999,
-                    fontSize: 11.5,
-                    fontWeight: 500,
-                    letterSpacing: '0.02em',
-                    transition: 'all 0.3s',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!active) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!active) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
-                  }}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-          <div
-            className="mono"
-            style={{
-              fontSize: 10.5,
-              color: 'rgba(255,255,255,0.4)',
-              letterSpacing: '0.1em',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {String(filtered.length).padStart(2, '0')} ITEMS · UPDATED 05/26
-          </div>
-        </motion.div>
-
-        {/* Product grid */}
-        <motion.div
-          layout
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: 12,
-          }}
-        >
-          <AnimatePresence mode="popLayout">
-            {filtered.map((product, i) => {
-              const isHover = hovered === product.id;
-              const num = String(i + 1).padStart(2, '0');
-              const total = String(filtered.length).padStart(2, '0');
-              const formula = product.formula || product.name.slice(0, 2).toUpperCase();
-              const catLabel = productCategories.find((c) => c.id === product.category)?.label || '';
-
-              return (
-                <motion.button
-                  key={product.id}
-                  layout
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.4, delay: i * 0.03 }}
-                  onClick={() => setSelectedProduct(product)}
-                  onMouseEnter={() => setHovered(product.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  style={{
-                    background: isHover
-                      ? 'linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))'
-                      : 'rgba(255,255,255,0.025)',
-                    border: `1px solid ${isHover ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.07)'}`,
-                    borderRadius: 14,
-                    padding: '20px 20px 16px',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    color: 'var(--paper)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minHeight: 240,
-                    position: 'relative',
-                    overflow: 'hidden',
-                    transform: isHover ? 'translateY(-4px)' : 'translateY(0)',
-                    boxShadow: isHover
-                      ? '0 18px 40px -22px rgba(29, 137, 151, 0.32), 0 4px 14px -8px rgba(0,0,0,0.4)'
-                      : 'none',
-                    transition:
-                      'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease, background 0.4s ease',
-                  }}
-                >
-                  {/* Subtle hover glow */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background:
-                        'radial-gradient(120% 80% at 0% 0%, rgba(29,137,151,0.18) 0%, transparent 55%)',
-                      opacity: isHover ? 1 : 0,
-                      transition: 'opacity 0.5s',
-                      pointerEvents: 'none',
-                    }}
-                  />
-
-                  {/* Top row — formula chip + arrow pill */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
-                      position: 'relative',
-                      zIndex: 1,
-                    }}
-                  >
-                    <motion.div
-                      animate={{
-                        backgroundColor: isHover ? 'var(--river)' : 'rgba(255,255,255,0.04)',
-                        borderColor: isHover ? 'var(--river)' : 'rgba(255,255,255,0.14)',
-                      }}
-                      transition={{ duration: 0.4 }}
-                      style={{
-                        minWidth: 52,
-                        height: 32,
-                        padding: '0 10px',
-                        borderRadius: 8,
-                        border: '1px solid rgba(255,255,255,0.14)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontFamily: 'JetBrains Mono, monospace',
-                        fontSize: 11,
-                        fontWeight: 600,
-                        letterSpacing: '0.02em',
-                        color: isHover ? 'var(--paper)' : 'var(--river-mist)',
-                        transition: 'color 0.4s',
-                      }}
-                    >
-                      {formula}
-                    </motion.div>
-
-                    <motion.div
-                      animate={{ rotate: isHover ? 45 : 0 }}
-                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: 999,
-                        border: `1px solid ${isHover ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.12)'}`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: isHover ? 'var(--paper)' : 'rgba(255,255,255,0.55)',
-                        transition: 'all 0.4s',
-                      }}
-                    >
-                      <ArrowUpRight size={12} strokeWidth={1.8} />
-                    </motion.div>
-                  </div>
-
-                  {/* Middle content */}
-                  <div style={{ marginTop: 'auto', position: 'relative', zIndex: 1 }}>
-                    <div
-                      style={{
-                        fontSize: 9.5,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.18em',
-                        color: 'rgba(255,255,255,0.42)',
-                        marginBottom: 10,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {catLabel}
-                    </div>
-
-                    <h3
-                      style={{
-                        fontSize: 'clamp(17px, 1.4vw, 20px)',
-                        fontWeight: 500,
-                        letterSpacing: '-0.02em',
-                        lineHeight: 1.1,
-                        marginBottom: 12,
-                        color: 'var(--paper)',
-                      }}
-                    >
-                      {product.name}
-                      <span
-                        className="serif"
-                        style={{
-                          color: 'var(--river-mist)',
-                          fontStyle: 'italic',
-                          marginLeft: 2,
-                        }}
-                      >
-                        .
-                      </span>
-                    </h3>
-
-                    {/* Animated divider */}
-                    <motion.div
-                      animate={{
-                        width: isHover ? '58%' : '22%',
-                        backgroundColor: isHover ? 'var(--river-mist)' : 'rgba(255,255,255,0.15)',
-                      }}
-                      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                      style={{
-                        height: 1.5,
-                        marginBottom: 12,
-                      }}
-                    />
-
-                    <p
-                      style={{
-                        fontSize: 12,
-                        color: 'rgba(255,255,255,0.6)',
-                        lineHeight: 1.55,
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {product.description}
-                    </p>
-                  </div>
-
-                  {/* Bottom — page numbering + reveal action */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginTop: 16,
-                      paddingTop: 12,
-                      borderTop: '1px solid rgba(255,255,255,0.07)',
-                      position: 'relative',
-                      zIndex: 1,
-                    }}
-                  >
-                    <span
-                      className="mono"
-                      style={{
-                        fontSize: 10,
-                        color: 'rgba(255,255,255,0.35)',
-                        letterSpacing: '0.08em',
-                      }}
-                    >
-                      {num} <span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span> {total}
-                    </span>
-                    <motion.span
-                      animate={{
-                        opacity: isHover ? 1 : 0,
-                        x: isHover ? 0 : -6,
-                      }}
-                      transition={{ duration: 0.35 }}
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 600,
-                        color: 'var(--paper)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.14em',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 5,
-                      }}
-                    >
-                      View specs <ArrowUpRight size={11} strokeWidth={2} />
-                    </motion.span>
-                  </div>
-                </motion.button>
-              );
-            })}
-
-            {/* "Add product" tile — communicates scalability
+        {/* Category boxes */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {ORDERED_CATALOGUE.map((cat, ci) => (
             <motion.div
-              key="add-tile"
-              layout
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: filtered.length * 0.03 }}
+              key={cat.id}
+              initial={{ opacity: 0, y: 18 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.55, delay: 0.08 + ci * 0.07, ease: [0.22, 1, 0.36, 1] }}
               style={{
-                border: '1px dashed rgba(255,255,255,0.14)',
+                background: 'var(--paper)',
+                border: '1px solid var(--line)',
                 borderRadius: 14,
-                padding: 20,
-                minHeight: 240,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                background: 'transparent',
-                position: 'relative',
+                padding: '24px 26px 22px',
+                transition: 'border-color 0.3s, box-shadow 0.3s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--line-2)';
+                e.currentTarget.style.boxShadow = '0 18px 40px -28px rgba(14,85,96,0.18)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--line)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              <div
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 999,
-                  border: '1px solid rgba(255,255,255,0.18)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'rgba(255,255,255,0.6)',
-                }}
-              >
-                <Plus size={16} strokeWidth={1.6} />
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: 9.5,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.18em',
-                    color: 'rgba(255,255,255,0.4)',
-                    marginBottom: 8,
-                    fontWeight: 600,
-                  }}
-                >
-                  Custom Sourcing
+              {/* Header */}
+              <div style={{
+                display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+                gap: 24, marginBottom: 16, flexWrap: 'wrap',
+              }}>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{
+                    fontSize: 16, fontWeight: 600, letterSpacing: '-0.005em',
+                    color: 'var(--ink)', marginBottom: 6, lineHeight: 1.2,
+                  }}>
+                    {cat.title}
+                  </h3>
+                  <p style={{
+                    fontSize: 13, color: 'var(--muted)',
+                    lineHeight: 1.55, maxWidth: 620,
+                  }}>
+                    {cat.desc}
+                  </p>
                 </div>
-                <h3
-                  style={{
-                    fontSize: 17,
-                    fontWeight: 500,
-                    letterSpacing: '-0.02em',
-                    lineHeight: 1.2,
-                    marginBottom: 10,
-                  }}
-                >
-                  Material not listed?
-                </h3>
-                <a
-                  href="#contact"
-                  style={{
-                    fontSize: 11,
-                    color: 'var(--river-mist)',
-                    fontWeight: 600,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.14em',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    textDecoration: 'none',
-                  }}
-                >
-                  Request sourcing <ArrowUpRight size={12} strokeWidth={2} />
-                </a>
+                <span className="mono" style={{
+                  fontSize: 10, color: 'var(--muted-2)', letterSpacing: '0.1em',
+                  whiteSpace: 'nowrap', paddingTop: 6,
+                }}>
+                  {String(ci + 1).padStart(2, '0')} / {String(CATALOGUE.length).padStart(2, '0')}
+                </span>
               </div>
-            </motion.div> */}
-          </AnimatePresence>
-        </motion.div>
 
-        {/* Scalability note */}
+              {/* Divider */}
+              <div style={{ height: 1, background: 'var(--line)', marginBottom: 16 }} />
+
+              {/* Product buttons */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {cat.products.map((prod) => (
+                  <button
+                    key={prod.id}
+                    onClick={() => openProduct(prod, cat.title)}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 6,
+                      padding: '8px 14px',
+                      borderRadius: 999,
+                      border: '1px solid var(--line-2)',
+                      background: 'var(--paper)',
+                      color: 'var(--ink-soft)',
+                      fontSize: 12.5, fontWeight: 500,
+                      transition: 'all 0.25s',
+                      cursor: 'pointer',
+                      letterSpacing: '0.01em',
+                      fontFamily: 'inherit',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'var(--ink)';
+                      e.currentTarget.style.borderColor = 'var(--ink)';
+                      e.currentTarget.style.color = 'var(--paper)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'var(--paper)';
+                      e.currentTarget.style.borderColor = 'var(--line-2)';
+                      e.currentTarget.style.color = 'var(--ink-soft)';
+                    }}
+                  >
+                    {prod.name}
+                    <ArrowUpRight size={12} strokeWidth={1.8} style={{ opacity: 0.6 }} />
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Sourcing request box */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.4 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.5 }}
           style={{
-            marginTop: 40,
-            padding: '20px 24px',
-            borderRadius: 12,
-            background:
-              'linear-gradient(135deg, rgba(29,137,151,0.10), rgba(29,137,151,0.015))',
-            border: '1px solid rgba(29, 137, 151, 0.22)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 18,
+            marginTop: 18,
+            padding: '24px 26px',
+            borderRadius: 14,
+            background: 'linear-gradient(135deg, rgba(14,85,96,0.06), rgba(14,85,96,0.01))',
+            border: '1px solid rgba(14,85,96,0.18)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            flexWrap: 'wrap', gap: 20,
           }}
         >
           <div>
-            <div
-              style={{
-                fontSize: 10.5,
-                textTransform: 'uppercase',
-                letterSpacing: '0.16em',
-                color: 'var(--river-mist)',
-                marginBottom: 6,
-                fontWeight: 600,
-              }}
-            >
-              Catalogue is expandable
+            <div style={{
+              fontSize: 10.5, textTransform: 'uppercase', letterSpacing: '0.18em',
+              color: 'var(--river)', fontWeight: 600, marginBottom: 8,
+            }}>
+              CUSTOM SOURCING
             </div>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.82)', maxWidth: 560, lineHeight: 1.55 }}>
-              Need a material not listed? Our sourcing team can qualify new vendors and onboard
-              products into the catalogue with full compliance documentation.
+            <p style={{ fontSize: 14, color: 'var(--ink-soft)', maxWidth: 540, lineHeight: 1.55 }}>
+              Need a material not listed? Our sourcing team maintains an extended portfolio.
+              Contact us with your requirements.
             </p>
           </div>
-          <a href="#contact" className="btn btn-light">
-            Request Sourcing <ArrowUpRight size={14} />
+          <a href="#contact" className="btn" style={{ whiteSpace: 'nowrap' }}>
+            Request sourcing discussion <ArrowUpRight size={14} />
           </a>
         </motion.div>
+
       </div>
 
-      {/* Product detail modal */}
+      {/* Detail modal */}
       <Modal
-        open={!!selectedProduct}
-        onCancel={() => setSelectedProduct(null)}
+        open={!!selected}
+        onCancel={() => setSelected(null)}
         footer={null}
         width={820}
         closable={false}
@@ -483,90 +666,62 @@ export default function Products() {
           mask: { background: 'rgba(10,10,10,0.7)', backdropFilter: 'blur(8px)' },
         }}
       >
-        {selectedProduct && (
-          <ProductDetail product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+        {selected && (
+          <ProductDetailPanel
+            product={selected}
+            catTitle={selectedCat}
+            onClose={() => setSelected(null)}
+          />
         )}
       </Modal>
     </section>
   );
 }
 
-function ProductDetail({ product, onClose }: { product: Product; onClose: () => void }) {
+function ProductDetailPanel({
+  product, catTitle, onClose,
+}: { product: ProductDetail; catTitle: string; onClose: () => void }) {
   const formula = product.formula || product.name.slice(0, 2).toUpperCase();
-  const catLabel = productCategories.find((c) => c.id === product.category)?.label || '';
 
   return (
     <div style={{ background: 'var(--paper)', color: 'var(--ink)', position: 'relative' }}>
-      {/* Editorial top band */}
-      <div
-        style={{
-          padding: '14px 28px',
-          background: 'var(--ink)',
-          color: 'var(--paper)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          fontSize: 10.5,
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          fontWeight: 600,
-        }}
-      >
+      {/* Top band */}
+      <div style={{
+        padding: '14px 28px', background: 'var(--ink)', color: 'var(--paper)',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        fontSize: 10.5, letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 600,
+      }}>
         <span>River Global · Product Specification</span>
         <span className="mono" style={{ letterSpacing: '0.1em' }}>
-          RG-{product.id.toUpperCase().slice(0, 6)}-001
+          RG-{product.id.toUpperCase().replace(/-/g, '').slice(0, 6)}-001
         </span>
       </div>
 
       {/* Header */}
-      <div
-        style={{
-          padding: '28px 28px 24px',
-          borderBottom: '1px solid var(--line)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          gap: 20,
-        }}
-      >
+      <div style={{
+        padding: '28px 28px 24px', borderBottom: '1px solid var(--line)',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20,
+      }}>
         <div style={{ display: 'flex', gap: 18, alignItems: 'flex-start' }}>
-          <div
-            style={{
-              minWidth: 62,
-              height: 62,
-              padding: '0 12px',
-              borderRadius: 12,
-              background: 'var(--ink)',
-              color: 'var(--paper)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 14,
-              fontWeight: 600,
-              fontFamily: 'JetBrains Mono, monospace',
-              flexShrink: 0,
-            }}
-          >
+          <div style={{
+            minWidth: 62, height: 62, padding: '0 12px', borderRadius: 12,
+            background: 'var(--ink)', color: 'var(--paper)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 13, fontWeight: 600, fontFamily: 'JetBrains Mono, monospace',
+            flexShrink: 0,
+          }}>
             {formula}
           </div>
           <div>
-            <div
-              style={{
-                fontSize: 10.5,
-                color: 'var(--muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.14em',
-                marginBottom: 6,
-                fontWeight: 600,
-              }}
-            >
-              {catLabel}
+            <div style={{
+              fontSize: 10.5, color: 'var(--muted)', textTransform: 'uppercase',
+              letterSpacing: '0.14em', marginBottom: 6, fontWeight: 600,
+            }}>
+              {catTitle}
             </div>
-            <h3 style={{ fontSize: 30, fontWeight: 500, letterSpacing: '-0.022em', marginBottom: 4, lineHeight: 1.1 }}>
+            <h3 style={{ fontSize: 28, fontWeight: 500, letterSpacing: '-0.022em', marginBottom: 4, lineHeight: 1.1 }}>
               {product.name}
-              <span className="serif" style={{ fontStyle: 'italic', color: 'var(--river)', marginLeft: 2 }}>
-                .
-              </span>
+              <span className="serif" style={{ fontStyle: 'italic', color: 'var(--river)', marginLeft: 2 }}>.</span>
             </h3>
             <div className="mono" style={{ fontSize: 11.5, color: 'var(--muted)' }}>
               Reviewed 05/2026 · Document control active
@@ -576,14 +731,9 @@ function ProductDetail({ product, onClose }: { product: Product; onClose: () => 
         <button
           onClick={onClose}
           style={{
-            background: 'transparent',
-            border: '1px solid var(--line)',
-            width: 38,
-            height: 38,
-            borderRadius: 999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            background: 'transparent', border: '1px solid var(--line)',
+            width: 38, height: 38, borderRadius: 999,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer',
           }}
         >
@@ -600,18 +750,12 @@ function ProductDetail({ product, onClose }: { product: Product; onClose: () => 
           </p>
         </div>
 
-        <div
-          style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, marginBottom: 28 }}
-          className="detail-grid"
-        >
+        <div className="detail-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, marginBottom: 28 }}>
           <div>
             <SectionLabel>Applications</SectionLabel>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 9 }}>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 9, padding: 0, margin: 0 }}>
               {product.applications.map((app) => (
-                <li
-                  key={app}
-                  style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5 }}
-                >
+                <li key={app} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5 }}>
                   <CheckCircle2 size={14} color="var(--river)" strokeWidth={1.6} />
                   {app}
                 </li>
@@ -623,17 +767,11 @@ function ProductDetail({ product, onClose }: { product: Product; onClose: () => 
             <SectionLabel>Specifications</SectionLabel>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {product.specifications.map((spec, i) => (
-                <div
-                  key={spec.label}
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '9px 0',
-                    borderBottom:
-                      i < product.specifications.length - 1 ? '1px solid var(--line)' : 'none',
-                    fontSize: 12.5,
-                  }}
-                >
+                <div key={spec.label} style={{
+                  display: 'flex', justifyContent: 'space-between', padding: '9px 0',
+                  borderBottom: i < product.specifications.length - 1 ? '1px solid var(--line)' : 'none',
+                  fontSize: 12.5,
+                }}>
                   <span style={{ color: 'var(--muted)' }}>{spec.label}</span>
                   <span style={{ fontWeight: 600 }}>{spec.value}</span>
                 </div>
@@ -646,17 +784,11 @@ function ProductDetail({ product, onClose }: { product: Product; onClose: () => 
           <SectionLabel>Compliance & Documentation</SectionLabel>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {product.compliance.map((c) => (
-              <span
-                key={c}
-                style={{
-                  fontSize: 11.5,
-                  padding: '6px 12px',
-                  borderRadius: 999,
-                  border: '1px solid var(--line-2)',
-                  background: 'var(--paper-2)',
-                  fontWeight: 500,
-                }}
-              >
+              <span key={c} style={{
+                fontSize: 11.5, padding: '6px 12px', borderRadius: 999,
+                border: '1px solid var(--line-2)', background: 'var(--paper-2)',
+                fontWeight: 500,
+              }}>
                 {c}
               </span>
             ))}
@@ -665,28 +797,11 @@ function ProductDetail({ product, onClose }: { product: Product; onClose: () => 
       </div>
 
       {/* Footer */}
-      <div
-        style={{
-          padding: '18px 28px',
-          borderTop: '1px solid var(--line)',
-          background: 'var(--paper-2)',
-          display: 'flex',
-          gap: 12,
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div
-          style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: 'var(--muted)' }}
-        >
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <FileText size={13} /> Safety Data Sheet
-          </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Download size={13} /> Technical Brochure
-          </span>
-        </div>
+      <div style={{
+        padding: '18px 28px', borderTop: '1px solid var(--line)',
+        background: 'var(--paper-2)', display: 'flex', gap: 12, flexWrap: 'wrap',
+        alignItems: 'center', justifyContent: 'flex-end',
+      }}>
         <a href="#contact" className="btn" onClick={onClose}>
           Inquire about {product.name} <ArrowUpRight size={14} />
         </a>
@@ -703,16 +818,10 @@ function ProductDetail({ product, onClose }: { product: Product; onClose: () => 
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      style={{
-        fontSize: 10.5,
-        textTransform: 'uppercase',
-        letterSpacing: '0.16em',
-        color: 'var(--muted)',
-        fontWeight: 600,
-        marginBottom: 12,
-      }}
-    >
+    <div style={{
+      fontSize: 10.5, textTransform: 'uppercase', letterSpacing: '0.16em',
+      color: 'var(--muted)', fontWeight: 600, marginBottom: 12,
+    }}>
       {children}
     </div>
   );

@@ -6,7 +6,7 @@ export default function Values() {
   const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true });
 
   return (
-    <section className="section" ref={ref}>
+    <section id="values" className="section" ref={ref}>
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -14,11 +14,11 @@ export default function Values() {
           transition={{ duration: 0.6 }}
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 24, marginBottom: 60 }}
         >
-          <div style={{ maxWidth: 720 }}>
-            <span className="eyebrow">08 — What we operate on</span>
-            <h2 className="h1" style={{ marginTop: 24 }}>
-              Values that decide<br />
-              <span className="serif" style={{ fontStyle: 'italic' }}>how</span> we operate.
+          <div style={{ maxWidth: 760 }}>
+            <span className="eyebrow">WHAT WE OPERATE ON</span>
+            <h2 className="h1" style={{ marginTop: 22 }}>
+              VALUES THAT DECIDE<br />
+              <span style={{ color: 'var(--river)' }}>HOW WE OPERATE</span>
             </h2>
           </div>
           <p className="body" style={{ maxWidth: 380 }}>
@@ -34,6 +34,7 @@ export default function Values() {
             background: 'var(--line)',
             border: '1px solid var(--line)',
           }}
+          className="values-grid-classic"
         >
           {values.map((v, i) => {
             const Icon = v.icon;
@@ -56,7 +57,7 @@ export default function Values() {
                 }}
               >
                 <div className="mono" style={{ fontSize: 11, color: 'var(--muted)' }}>0{i + 1}</div>
-                <Icon size={26} strokeWidth={1.4} color="var(--ink)" />
+                <Icon size={26} strokeWidth={1.4} color="var(--river-soft)" />
                 <h3 style={{ fontSize: 19, fontWeight: 500, letterSpacing: '-0.01em', marginTop: 'auto' }}>
                   {v.name}
                 </h3>
@@ -66,6 +67,15 @@ export default function Values() {
           })}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 1100px) {
+          .values-grid-classic { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 560px) {
+          .values-grid-classic { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   );
 }

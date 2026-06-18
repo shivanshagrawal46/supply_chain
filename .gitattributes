@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Shell scripts MUST keep LF endings so they run on the Linux droplet
+# (prevents "/bin/bash^M: bad interpreter" when pulled on Windows)
+*.sh text eol=lf
+deploy.sh text eol=lf

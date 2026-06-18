@@ -26,10 +26,13 @@ const HUBS: Hub[] = [
   { id: 'shanghai', name: 'Shanghai', x: 72, y: 30, tier: 2, labelAnchor: 'middle', labelDy: -3 },
   // SE Asia
   { id: 'singapore', name: 'Singapore', x: 60, y: 56, tier: 2, labelAnchor: 'start', labelDx: 3, labelDy: 1 },
-  // Australia (primary)
-  { id: 'perth', name: 'Perth', x: 64, y: 78, tier: 2, labelAnchor: 'middle', labelDy: 5 },
-  { id: 'sydney', name: 'Sydney', x: 86, y: 76, tier: 1, labelAnchor: 'start', labelDx: 3, labelDy: 1 },
-  { id: 'melbourne', name: 'Melbourne', x: 82, y: 86, tier: 3, labelAnchor: 'middle', labelDy: 5 },
+  // Australia (primary destination — multiple ports)
+  { id: 'darwin', name: 'Darwin', x: 70, y: 64, tier: 3, labelAnchor: 'middle', labelDy: -3 },
+  { id: 'perth', name: 'Perth', x: 60, y: 80, tier: 3, labelAnchor: 'end', labelDx: -3, labelDy: 1 },
+  { id: 'adelaide', name: 'Adelaide', x: 74, y: 86, tier: 3, labelAnchor: 'middle', labelDy: 5 },
+  { id: 'melbourne', name: 'Melbourne', x: 81, y: 90, tier: 3, labelAnchor: 'middle', labelDy: 5 },
+  { id: 'sydney', name: 'Sydney', x: 88, y: 82, tier: 1, labelAnchor: 'start', labelDx: 3, labelDy: 1 },
+  { id: 'brisbane', name: 'Brisbane', x: 90, y: 70, tier: 3, labelAnchor: 'start', labelDx: 3, labelDy: 1 },
 ];
 
 // Network web — each pair becomes a high-arc curve
@@ -39,14 +42,21 @@ const ROUTES: Array<[string, string]> = [
   ['dubai', 'mumbai'],
   ['dubai', 'singapore'],
   ['mumbai', 'singapore'],
-  ['mumbai', 'sydney'],
   ['mumbai', 'shanghai'],
   ['shanghai', 'singapore'],
-  ['shanghai', 'sydney'],
-  ['singapore', 'sydney'],
+  // International → Australian ports
+  ['singapore', 'darwin'],
   ['singapore', 'perth'],
-  ['perth', 'sydney'],
-  ['sydney', 'melbourne'],
+  ['shanghai', 'brisbane'],
+  ['mumbai', 'perth'],
+  ['singapore', 'sydney'],
+  ['shanghai', 'sydney'],
+  // Domestic Australian corridors between ports
+  ['perth', 'adelaide'],
+  ['darwin', 'brisbane'],
+  ['adelaide', 'melbourne'],
+  ['melbourne', 'sydney'],
+  ['sydney', 'brisbane'],
 ];
 
 // Build a fast lookup
@@ -79,11 +89,12 @@ const routePaths = ROUTES.map(([fromId, toId]) => {
 
 // Headline corridors that get animated travelling pulses
 const SIGNATURE = [
-  ['mumbai', 'sydney'],
   ['singapore', 'sydney'],
+  ['mumbai', 'perth'],
   ['rotterdam', 'mumbai'],
   ['dubai', 'singapore'],
-  ['shanghai', 'sydney'],
+  ['shanghai', 'brisbane'],
+  ['singapore', 'darwin'],
 ];
 
 export default function GlobalNetwork() {
@@ -106,20 +117,17 @@ export default function GlobalNetwork() {
           }}
         >
           <div style={{ maxWidth: 720 }}>
-            <span className="eyebrow">05 — Global Network</span>
-            <h2 className="h1" style={{ marginTop: 24 }}>
-              Australian reach,
-              <br />
-              <span className="serif" style={{ fontStyle: 'italic' }}>
-                international
-              </span>{' '}
-              coordination.
+            <span className="eyebrow">GLOBAL NETWORK</span>
+            <h2 className="h1" style={{ marginTop: 22 }}>
+              CONNECTING AUSTRALIAN DEMAND WITH<br />
+              <span style={{ color: 'var(--river)' }}>INTERNATIONAL SUPPLY CAPACITY</span>
             </h2>
           </div>
-          <p className="body" style={{ maxWidth: 380 }}>
-            Operational hubs in Australia and India, supported by partner networks across Asia
-            Pacific, the Middle East and Europe — corridors designed around the trade lanes our
-            customers actually use.
+          <p className="body" style={{ maxWidth: 400 }}>
+            River Global operates across Asia, connecting Australian demand with supply capacity
+            across international markets. Our trade network spans multiple commodity sectors and
+            freight corridors — navigating regulatory environments, port infrastructure, and freight
+            market conditions across multiple jurisdictions.
           </p>
         </motion.div>
 
@@ -493,18 +501,12 @@ export default function GlobalNetwork() {
                 <div
                   style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'flex-end',
                     alignItems: 'flex-start',
                     gap: 12,
                     marginBottom: 8,
                   }}
                 >
-                  <div
-                    className="mono"
-                    style={{ fontSize: 10.5, color: 'var(--muted)', letterSpacing: '0.08em' }}
-                  >
-                    0{i + 1}
-                  </div>
                   <span
                     style={{
                       fontSize: 9.5,
@@ -526,21 +528,12 @@ export default function GlobalNetwork() {
                     fontSize: 20,
                     fontWeight: 500,
                     letterSpacing: '-0.02em',
-                    marginBottom: 6,
+                    marginBottom: 0,
                     lineHeight: 1.15,
                   }}
                 >
                   {loc.region}
-                  <span
-                    className="serif"
-                    style={{ color: 'var(--river)', fontStyle: 'italic', marginLeft: 2 }}
-                  >
-                    .
-                  </span>
                 </h3>
-                <p style={{ fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.5 }}>
-                  {loc.cities.join(' · ')}
-                </p>
               </motion.div>
             ))}
           </div>

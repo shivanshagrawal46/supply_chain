@@ -18,10 +18,10 @@ export default function Capabilities() {
           style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 60, flexWrap: 'wrap', gap: 20 }}
         >
           <div style={{ maxWidth: 720 }}>
-            <span className="eyebrow">02 — How we do it</span>
-            <h2 className="h1" style={{ marginTop: 24 }}>
-              Five capabilities,<br />
-              <span className="serif" style={{ fontStyle: 'italic' }}>one</span> accountable team.
+            <span className="eyebrow">WHAT WE DO</span>
+            <h2 className="h1" style={{ marginTop: 22 }}>
+              FIVE CAPABILITIES,<br />
+              <span style={{ color: 'var(--river)' }}>ONE ACCOUNTABLE TEAM</span>
             </h2>
           </div>
           <p className="body" style={{ maxWidth: 360 }}>
@@ -49,7 +49,7 @@ export default function Capabilities() {
                   overflow: 'hidden',
                 }}
               >
-                {/* Hover background sweep */}
+                {/* Hover background sweep — teal gradient */}
                 <motion.div
                   initial={false}
                   animate={{ scaleX: isHover ? 1 : 0 }}
@@ -57,7 +57,7 @@ export default function Capabilities() {
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    background: 'var(--ink)',
+                    background: 'linear-gradient(135deg, var(--river) 0%, var(--river-soft) 100%)',
                     transformOrigin: 'left',
                   }}
                 />
@@ -66,7 +66,7 @@ export default function Capabilities() {
                   style={{
                     position: 'relative',
                     display: 'grid',
-                    gridTemplateColumns: '60px 1fr 1fr 60px',
+                    gridTemplateColumns: '1.3fr 1fr 56px',
                     alignItems: 'center',
                     gap: 24,
                     color: isHover ? 'var(--paper)' : 'var(--ink)',
@@ -74,10 +74,6 @@ export default function Capabilities() {
                   }}
                   className="cap-row"
                 >
-                  <div className="mono" style={{ fontSize: 12, opacity: 0.6 }}>
-                    0{i + 1}
-                  </div>
-
                   <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
                     <motion.div
                       animate={{ rotate: isHover ? 12 : 0, scale: isHover ? 1.05 : 1 }}
@@ -125,7 +121,7 @@ export default function Capabilities() {
                       transition={{ duration: 0.4 }}
                       style={{ position: 'relative', overflow: 'hidden' }}
                     >
-                      <div style={{ display: 'flex', gap: 12, paddingTop: 22, marginLeft: 84, color: 'rgba(255,255,255,0.85)' }}>
+                      <div style={{ display: 'flex', gap: 12, paddingTop: 22, marginLeft: 66, color: 'rgba(255,255,255,0.85)' }}>
                         {cap.points.map((point) => (
                           <span
                             key={point}
