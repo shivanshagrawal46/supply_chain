@@ -480,6 +480,12 @@ export default function Hero() {
         }
 
         @media (max-width: 600px) {
+          /* Scale the headline with the viewport so the one-line phrases never clip */
+          .hero-text-col h1 {
+            font-size: clamp(16px, 5.2vw, 26px) !important;
+            line-height: 1.12 !important;
+            letter-spacing: 0 !important;
+          }
           /* 2 metrics per row, and hide the scroll cue on mobile */
           .hero-metrics {
             display: grid !important;
