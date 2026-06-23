@@ -28,11 +28,11 @@ const HUBS: Hub[] = [
   { id: 'singapore', name: 'Singapore', x: 60, y: 56, tier: 2, labelAnchor: 'start', labelDx: 3, labelDy: 1 },
   // Australia (primary destination — multiple ports)
   { id: 'darwin', name: 'Darwin', x: 70, y: 64, tier: 3, labelAnchor: 'middle', labelDy: -3 },
-  { id: 'perth', name: 'Brisbane', x: 60, y: 80, tier: 3, labelAnchor: 'end', labelDx: -3, labelDy: 1 },
+  { id: 'perth', name: 'Perth', x: 60, y: 80, tier: 3, labelAnchor: 'end', labelDx: -3, labelDy: 1 },
   { id: 'adelaide', name: 'Adelaide', x: 74, y: 86, tier: 3, labelAnchor: 'middle', labelDy: 5 },
   { id: 'melbourne', name: 'Melbourne', x: 81, y: 90, tier: 3, labelAnchor: 'middle', labelDy: 5 },
   { id: 'sydney', name: 'Sydney', x: 88, y: 82, tier: 1, labelAnchor: 'start', labelDx: 3, labelDy: 1 },
-  { id: 'brisbane', name: 'Perth', x: 90, y: 70, tier: 3, labelAnchor: 'end', labelDx: -3, labelDy: 1 },
+  { id: 'brisbane', name: 'Brisbane', x: 90, y: 70, tier: 3, labelAnchor: 'end', labelDx: -3, labelDy: 1 },
 ];
 
 // Network web — each pair becomes a high-arc curve
